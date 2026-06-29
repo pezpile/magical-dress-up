@@ -4,8 +4,12 @@
   padding: 0;
 }
 
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
-  min-height: 100vh;
   background: linear-gradient(135deg,
     #fff8e0 0%,
     #ffd6e8 35%,
@@ -17,7 +21,7 @@ body {
 }
 
 #root {
-  min-height: 100vh;
+  height: 100%;
 }
 
 button {

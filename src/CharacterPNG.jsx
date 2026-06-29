@@ -1,11 +1,15 @@
-// Asset maps — add new entries as PNGs are created
-// e.g. HAIR_BACK[1] = '/assets/hairback2.png'
+// Eye sets: each entry pairs a sclera (fixed white) with an iris (color-tinted)
+// Add new eye styles here: EYES_ASSETS[n] = { sclera: '...', iris: '...' }
+const EYES_ASSETS = {
+  0: { sclera: '/assets/sclera1.png', iris: '/assets/eye1.png' },
+};
+
+// Other feature asset maps
+const EYEBROWS_ASSETS = { 0: '/assets/eyebrow1.png' };
+const MOUTH_ASSETS    = { 0: '/assets/mouth1.png'   };
+const NOSE_ASSETS     = { 0: '/assets/nose.png'     };
+const BANGS_ASSETS    = { 0: '/assets/bang1.png'    };
 const HAIR_BACK_ASSETS = { 0: '/assets/hairback1.png' };
-const BANGS_ASSETS     = { 0: '/assets/bang1.png'     };
-const EYES_ASSETS      = { 0: '/assets/eye1.png'      };
-const EYEBROWS_ASSETS  = { 0: '/assets/eyebrow1.png'  };
-const MOUTH_ASSETS     = { 0: '/assets/mouth1.png'    };
-const NOSE_ASSETS      = { 0: '/assets/nose.png'      };
 
 function hexToRgb(hex) {
   const h = hex.replace('#', '');
@@ -28,7 +32,7 @@ function MatrixFilter({ id, color, scale = 2 }) {
   );
 }
 
-// Eye tint — table lookup: black lashes→black, gray iris→eyeColor, white sclera→white
+// Eye iris tint — table: black lashes→black, gray iris→eyeColor, white→white
 function EyeFilter({ id, color }) {
   const [r, g, b] = hexToRgb(color);
   return (
@@ -38,6 +42,16 @@ function EyeFilter({ id, color }) {
         <feFuncG type="table" tableValues={`0 ${g} 1`} />
         <feFuncB type="table" tableValues={`0 ${b} 1`} />
       </feComponentTransfer>
+    </filter>
+  );
+}
+
+// Sclera filter — forces every non-transparent pixel to pure white
+const WHITEN_ID = 'whiten-sclera';
+function WhitenFilter() {
+  return (
+    <filter id={WHITEN_ID} colorInterpolationFilters="sRGB" x="0" y="0" width="1" height="1">
+      <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0" />
     </filter>
   );
 }
@@ -63,12 +77,12 @@ export default function CharacterPNG({
     eye:  `eye-${eyeColor.replace('#', '')}`,
   };
 
-  const hairBackSrc  = hairBack  != null ? HAIR_BACK_ASSETS[hairBack]  : null;
-  const bangsSrc     = bangs     != null ? BANGS_ASSETS[bangs]         : null;
-  const eyesSrc      = eyes      != null ? EYES_ASSETS[eyes]           : null;
-  const eyebrowsSrc  = eyebrows  != null ? EYEBROWS_ASSETS[eyebrows]   : null;
-  const mouthSrc     = mouth     != null ? MOUTH_ASSETS[mouth]         : null;
-  const noseSrc      = nose      != null ? NOSE_ASSETS[nose]           : null;
+  const eyeSet     = eyes      != null ? EYES_ASSETS[eyes]          : null;
+  const eyebrowSrc = eyebrows  != null ? EYEBROWS_ASSETS[eyebrows]  : null;
+  const mouthSrc   = mouth     != null ? MOUTH_ASSETS[mouth]        : null;
+  const noseSrc    = nose      != null ? NOSE_ASSETS[nose]          : null;
+  const bangsSrc   = bangs     != null ? BANGS_ASSETS[bangs]        : null;
+  const hairBackSrc = hairBack != null ? HAIR_BACK_ASSETS[hairBack] : null;
 
   return (
     <div className="character-group">
@@ -78,17 +92,19 @@ export default function CharacterPNG({
           <MatrixFilter id={ids.skin} color={skinColor} />
           <MatrixFilter id={ids.hair} color={hairColor} />
           <EyeFilter    id={ids.eye}  color={eyeColor}  />
+          <WhitenFilter />
         </defs>
       </svg>
 
-      {/* Layer order: hair back → base → eyes → brows → mouth → nose → bangs */}
-      {hairBackSrc && <Layer src={hairBackSrc} filterId={ids.hair} />}
-      <Layer src="/assets/base.png" filterId={ids.skin} />
-      {eyesSrc     && <Layer src={eyesSrc}     filterId={ids.eye}  />}
-      {eyebrowsSrc && <Layer src={eyebrowsSrc} filterId={ids.hair} />}
-      {mouthSrc    && <Layer src={mouthSrc}    filterId={ids.skin} />}
-      {noseSrc     && <Layer src={noseSrc}     filterId={ids.skin} />}
-      {bangsSrc    && <Layer src={bangsSrc}    filterId={ids.hair} />}
+      {/* Layer order: hair back → base → sclera → iris → brows → mouth → nose → bangs */}
+      {hairBackSrc  && <Layer src={hairBackSrc}   filterId={ids.hair}   />}
+                       <Layer src="/assets/base.png" filterId={ids.skin} />
+      {eyeSet?.sclera && <Layer src={eyeSet.sclera} filterId={WHITEN_ID} />}
+      {eyeSet?.iris   && <Layer src={eyeSet.iris}   filterId={ids.eye}   />}
+      {eyebrowSrc   && <Layer src={eyebrowSrc}    filterId={ids.hair}   />}
+      {mouthSrc     && <Layer src={mouthSrc}      filterId={ids.skin}   />}
+      {noseSrc      && <Layer src={noseSrc}       filterId={ids.skin}   />}
+      {bangsSrc     && <Layer src={bangsSrc}      filterId={ids.hair}   />}
     </div>
   );
 }
