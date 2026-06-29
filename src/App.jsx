@@ -48,10 +48,6 @@ export default function App() {
 
   return (
     <div className="app">
-      <header className="app-header">
-        <h1>✨ Magical Dress-Up ✨</h1>
-      </header>
-
       <main className="main-content">
         {/* Left: Color controls */}
         <div className="color-panel">
@@ -62,9 +58,6 @@ export default function App() {
             <ColorSwatch label="Eyes" color={eyeColor}  onChange={setEyeColor}  />
           </div>
 
-          <div className="panel-card tips-card">
-            <p className="tip">Click the colored circles to open a color wheel!</p>
-          </div>
         </div>
 
         {/* Center: Character stage */}
@@ -100,3 +93,4 @@ export default function App() {
     </div>
   );
 }
+

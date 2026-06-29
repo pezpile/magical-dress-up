@@ -53,8 +53,6 @@ function Layer({ src, filterId }) {
   );
 }
 
-const SIZE = 480;
-
 export default function CharacterPNG({
   skinColor, hairColor, eyeColor,
   eyes, eyebrows, mouth, nose, bangs, hairBack,
@@ -73,8 +71,7 @@ export default function CharacterPNG({
   const noseSrc      = nose      != null ? NOSE_ASSETS[nose]           : null;
 
   return (
-    <div className="character-group"
-      style={{ position: 'relative', width: SIZE, height: SIZE, flexShrink: 0 }}>
+    <div className="character-group">
       <svg aria-hidden="true"
         style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
         <defs>

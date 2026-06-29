@@ -38,12 +38,12 @@ export default function Wardrobe({
 }) {
   return (
     <div className="wardrobe-panel">
-      <Section label="Hair Back" items={HAIR_BACK} selected={hairBack} onSelect={onHairBack} />
-      <Section label="Bangs"     items={BANGS}     selected={bangs}    onSelect={onBangs}    />
       <Section label="Eyes"      items={EYES}      selected={eyes}     onSelect={onEyes}     />
       <Section label="Eyebrows"  items={EYEBROWS}  selected={eyebrows} onSelect={onEyebrows} />
-      <Section label="Mouth"     items={MOUTH}     selected={mouth}    onSelect={onMouth}    />
       <Section label="Nose"      items={NOSE}      selected={nose}     onSelect={onNose}     />
+      <Section label="Mouth"     items={MOUTH}     selected={mouth}    onSelect={onMouth}    />
+      <Section label="Bangs"     items={BANGS}     selected={bangs}    onSelect={onBangs}    />
+      <Section label="Hair Back" items={HAIR_BACK} selected={hairBack} onSelect={onHairBack} />
     </div>
   );
 }
