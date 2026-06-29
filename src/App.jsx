@@ -46,6 +46,11 @@ export default function App() {
   const [bangs,    setBangs]    = useState(0);
   const [hairBack, setHairBack] = useState(0);
 
+  const drawRef   = useRef(null);
+  const [drawTool,  setDrawTool]  = useState('brush');
+  const [drawColor, setDrawColor] = useState('#e87cd4');
+  const [brushSize, setBrushSize] = useState(12);
+
   return (
     <div className="app">
       <main className="main-content">
@@ -56,6 +61,34 @@ export default function App() {
             <ColorSwatch label="Skin" color={skinColor} onChange={setSkinColor} />
             <ColorSwatch label="Hair" color={hairColor} onChange={setHairColor} />
             <ColorSwatch label="Eyes" color={eyeColor}  onChange={setEyeColor}  />
+          </div>
+
+          <div className="panel-card">
+            <h2 className="panel-title">Draw</h2>
+            <div className="draw-tools">
+              <button
+                className={`tool-btn ${drawTool === 'brush' ? 'active' : ''}`}
+                onClick={() => setDrawTool('brush')}
+              >Brush</button>
+              <button
+                className={`tool-btn ${drawTool === 'eraser' ? 'active' : ''}`}
+                onClick={() => setDrawTool('eraser')}
+              >Erase</button>
+            </div>
+            <ColorSwatch label="Color" color={drawColor} onChange={setDrawColor} />
+            <div className="brush-size-row">
+              <span className="brush-size-label">Size</span>
+              <input
+                type="range" min="3" max="50"
+                value={brushSize}
+                onChange={e => setBrushSize(+e.target.value)}
+              />
+            </div>
+            <div className="draw-actions">
+              <button className="draw-action-btn" onClick={() => drawRef.current?.undo()}>↩ Undo</button>
+              <button className="draw-action-btn" onClick={() => drawRef.current?.redo()}>↪ Redo</button>
+              <button className="draw-action-btn" onClick={() => drawRef.current?.clear()}>✕ Clear</button>
+            </div>
           </div>
 
         </div>
@@ -77,6 +110,10 @@ export default function App() {
             nose={nose}
             bangs={bangs}
             hairBack={hairBack}
+            drawRef={drawRef}
+            drawTool={drawTool}
+            drawColor={drawColor}
+            brushSize={brushSize}
           />
         </div>
 

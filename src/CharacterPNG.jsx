@@ -1,3 +1,5 @@
+import DrawingCanvas from './DrawingCanvas.jsx';
+
 // Eye sets: each entry pairs a sclera (fixed white) with an iris (color-tinted)
 // Add new eye styles here: EYES_ASSETS[n] = { sclera: '...', iris: '...' }
 const EYES_ASSETS = {
@@ -70,6 +72,7 @@ function Layer({ src, filterId }) {
 export default function CharacterPNG({
   skinColor, hairColor, eyeColor,
   eyes, eyebrows, mouth, nose, bangs, hairBack,
+  drawRef, drawTool, drawColor, brushSize,
 }) {
   const ids = {
     skin: `skin-${skinColor.replace('#', '')}`,
@@ -105,6 +108,7 @@ export default function CharacterPNG({
       {mouthSrc     && <Layer src={mouthSrc}      filterId={ids.skin}   />}
       {noseSrc      && <Layer src={noseSrc}       filterId={ids.skin}   />}
       {bangsSrc     && <Layer src={bangsSrc}      filterId={ids.hair}   />}
+      <DrawingCanvas ref={drawRef} tool={drawTool} color={drawColor} size={brushSize} />
     </div>
   );
 }

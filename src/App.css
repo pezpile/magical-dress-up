@@ -208,6 +208,84 @@
 .item-name  { font-size: 0.6rem; color: #5a7a9a; text-align: center; line-height: 1.2; }
 .none-btn   { font-size: 0.9rem; color: #a8c0d8; }
 
+/* ── Draw panel ─────────────────────────────────────────────── */
+
+.draw-tools {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.tool-btn {
+  flex: 1;
+  padding: 7px 4px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #7a5570;
+  letter-spacing: 0.04em;
+  transition: all 0.15s;
+}
+
+.tool-btn:hover {
+  background: rgba(255, 215, 235, 0.75);
+  transform: scale(1.05);
+}
+
+.tool-btn.active {
+  border-color: #88b4e0;
+  background: rgba(180, 215, 245, 0.35);
+  box-shadow: 0 0 0 3px rgba(180, 215, 245, 0.3);
+  color: #4a7ab0;
+}
+
+.brush-size-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.brush-size-label {
+  font-size: 0.82rem;
+  color: #7a5570;
+  width: 36px;
+  flex-shrink: 0;
+}
+
+.brush-size-row input[type="range"] {
+  flex: 1;
+  accent-color: #c07098;
+  cursor: pointer;
+}
+
+.draw-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.draw-action-btn {
+  flex: 1;
+  padding: 6px 2px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  font-size: 0.62rem;
+  color: #7a5570;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: all 0.15s;
+}
+
+.draw-action-btn:hover {
+  background: rgba(255, 215, 235, 0.75);
+  transform: scale(1.04);
+}
+
 /* ── Character animations ───────────────────────────────────── */
 
 /* Size = smaller of 88% viewport height or the available center-column width */
