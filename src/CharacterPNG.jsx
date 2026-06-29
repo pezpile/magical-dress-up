@@ -8,7 +8,7 @@ const EYES_ASSETS = {
 const EYEBROWS_ASSETS = { 0: '/assets/eyebrow1.png' };
 const MOUTH_ASSETS    = { 0: '/assets/mouth1.png'   };
 const NOSE_ASSETS     = { 0: '/assets/nose.png'     };
-const BANGS_ASSETS    = { 0: '/assets/bang1.png'    };
+const BANGS_ASSETS    = { 0: '/assets/bang1.png', 1: '/assets/bang2.png' };
 const HAIR_BACK_ASSETS = { 0: '/assets/hairback1.png' };
 
 function hexToRgb(hex) {

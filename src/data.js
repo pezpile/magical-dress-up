@@ -16,6 +16,7 @@ export const NOSE = [
 
 export const BANGS = [
   { id: 0, name: 'Style 1', emoji: '✂️' },
+  { id: 1, name: 'Style 2', emoji: '✂️' },
 ];
 
 export const HAIR_BACK = [
