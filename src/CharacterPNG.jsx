@@ -1,12 +1,11 @@
-// Add a new hair style: HAIR[n] = { back: '/assets/hairbackN.png', front: '/assets/bangN.png' }
-const HAIR = {
-  0: { back: '/assets/hairback1.png', front: '/assets/bang1.png' },
-};
-
-// Add a new eye shape: EYES[n] = { iris: '/assets/eyeN.png', brows: '/assets/eyebrowN.png' }
-const EYES = {
-  0: { iris: '/assets/eye1.png', brows: '/assets/eyebrow1.png' },
-};
+// Asset maps — add new entries as PNGs are created
+// e.g. HAIR_BACK[1] = '/assets/hairback2.png'
+const HAIR_BACK_ASSETS = { 0: '/assets/hairback1.png' };
+const BANGS_ASSETS     = { 0: '/assets/bang1.png'     };
+const EYES_ASSETS      = { 0: '/assets/eye1.png'      };
+const EYEBROWS_ASSETS  = { 0: '/assets/eyebrow1.png'  };
+const MOUTH_ASSETS     = { 0: '/assets/mouth1.png'    };
+const NOSE_ASSETS      = { 0: '/assets/nose.png'      };
 
 function hexToRgb(hex) {
   const h = hex.replace('#', '');
@@ -17,15 +16,14 @@ function hexToRgb(hex) {
   ];
 }
 
-// Standard tint — scale=2 compensates for ~50% gray base drawing
-// black outlines stay black (0 × anything = 0), highlights clamp to color
+// Standard tint — scale=2 maps 50%-gray base to the full target color
 function MatrixFilter({ id, color, scale = 2 }) {
   const [r, g, b] = hexToRgb(color);
   const s = scale;
-  const m = `${s*r} 0 0 0 0  ${s*g} 0 0 0 0  ${s*b} 0 0 0 0  0 0 0 1 0`;
   return (
     <filter id={id} colorInterpolationFilters="sRGB" x="0" y="0" width="1" height="1">
-      <feColorMatrix type="matrix" values={m} />
+      <feColorMatrix type="matrix"
+        values={`${s*r} 0 0 0 0  ${s*g} 0 0 0 0  ${s*b} 0 0 0 0  0 0 0 1 0`} />
     </filter>
   );
 }
@@ -46,67 +44,54 @@ function EyeFilter({ id, color }) {
 
 function Layer({ src, filterId }) {
   return (
-    <img
-      src={src}
-      alt=""
-      style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        objectFit: 'fill',
-        filter: filterId ? `url(#${filterId})` : undefined,
-      }}
-    />
+    <img src={src} alt="" style={{
+      position: 'absolute', top: 0, left: 0,
+      width: '100%', height: '100%',
+      objectFit: 'fill',
+      filter: filterId ? `url(#${filterId})` : undefined,
+    }} />
   );
 }
 
 const SIZE = 480;
 
-export default function CharacterPNG({ skinColor, hairColor, eyeColor, hairStyle, eyeShape }) {
-  const hair = HAIR[hairStyle];
-  const eyes = EYES[eyeShape];
-
+export default function CharacterPNG({
+  skinColor, hairColor, eyeColor,
+  eyes, eyebrows, mouth, nose, bangs, hairBack,
+}) {
   const ids = {
     skin: `skin-${skinColor.replace('#', '')}`,
     hair: `hair-${hairColor.replace('#', '')}`,
     eye:  `eye-${eyeColor.replace('#', '')}`,
   };
 
+  const hairBackSrc  = hairBack  != null ? HAIR_BACK_ASSETS[hairBack]  : null;
+  const bangsSrc     = bangs     != null ? BANGS_ASSETS[bangs]         : null;
+  const eyesSrc      = eyes      != null ? EYES_ASSETS[eyes]           : null;
+  const eyebrowsSrc  = eyebrows  != null ? EYEBROWS_ASSETS[eyebrows]   : null;
+  const mouthSrc     = mouth     != null ? MOUTH_ASSETS[mouth]         : null;
+  const noseSrc      = nose      != null ? NOSE_ASSETS[nose]           : null;
+
   return (
-    <div
-      className="character-group"
-      style={{ position: 'relative', width: SIZE, height: SIZE, flexShrink: 0 }}
-    >
-      <svg aria-hidden="true" style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
+    <div className="character-group"
+      style={{ position: 'relative', width: SIZE, height: SIZE, flexShrink: 0 }}>
+      <svg aria-hidden="true"
+        style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }}>
         <defs>
           <MatrixFilter id={ids.skin} color={skinColor} />
           <MatrixFilter id={ids.hair} color={hairColor} />
-          <EyeFilter    id={ids.eye}  color={eyeColor} />
+          <EyeFilter    id={ids.eye}  color={eyeColor}  />
         </defs>
       </svg>
 
-      {/* 1 — hair back (selected style, behind body) */}
-      {hair && <Layer src={hair.back} filterId={ids.hair} />}
-
-      {/* 2 — body base (always shown) */}
+      {/* Layer order: hair back → base → eyes → brows → mouth → nose → bangs */}
+      {hairBackSrc && <Layer src={hairBackSrc} filterId={ids.hair} />}
       <Layer src="/assets/base.png" filterId={ids.skin} />
-
-      {/* 3 — eyes (selected shape) */}
-      {eyes && <Layer src={eyes.iris} filterId={ids.eye} />}
-
-      {/* 4 — eyebrows (match hair color, same shape set as eyes) */}
-      {eyes && <Layer src={eyes.brows} filterId={ids.hair} />}
-
-      {/* 5 — mouth (always shown, skin-shadow tint) */}
-      <Layer src="/assets/mouth1.png" filterId={ids.skin} />
-
-      {/* 6 — nose (always shown) */}
-      <Layer src="/assets/nose.png" filterId={ids.skin} />
-
-      {/* 7 — bangs / front hair (selected style, on top) */}
-      {hair && <Layer src={hair.front} filterId={ids.hair} />}
+      {eyesSrc     && <Layer src={eyesSrc}     filterId={ids.eye}  />}
+      {eyebrowsSrc && <Layer src={eyebrowsSrc} filterId={ids.hair} />}
+      {mouthSrc    && <Layer src={mouthSrc}    filterId={ids.skin} />}
+      {noseSrc     && <Layer src={noseSrc}     filterId={ids.skin} />}
+      {bangsSrc    && <Layer src={bangsSrc}    filterId={ids.hair} />}
     </div>
   );
 }

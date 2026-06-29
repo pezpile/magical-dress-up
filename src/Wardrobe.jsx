@@ -1,20 +1,17 @@
-import React from 'react';
-import { HAIR_STYLES, EYE_SHAPES, TOPS, BOTTOMS, DRESSES, ACCESSORIES } from './data.js';
+import { EYES, EYEBROWS, MOUTH, NOSE, BANGS, HAIR_BACK } from './data.js';
 
-function ItemRow({ label, items, selected, onSelect, allowNone = false }) {
+function Section({ label, items, selected, onSelect }) {
   return (
     <div className="wardrobe-section">
       <h3>{label}</h3>
       <div className="item-grid">
-        {allowNone && (
-          <button
-            className={`item-btn none-btn ${selected === null ? 'selected' : ''}`}
-            onClick={() => onSelect(null)}
-            title="None"
-          >
-            ✕
-          </button>
-        )}
+        <button
+          className={`item-btn none-btn ${selected === null ? 'selected' : ''}`}
+          onClick={() => onSelect(null)}
+          title="None"
+        >
+          ✕
+        </button>
         {items.map(item => (
           <button
             key={item.id}
@@ -31,49 +28,22 @@ function ItemRow({ label, items, selected, onSelect, allowNone = false }) {
   );
 }
 
-export default function Wardrobe({ outfit, onOutfitChange, hairStyle, eyeShape, onHairChange, onEyeChange }) {
+export default function Wardrobe({
+  eyes,     onEyes,
+  eyebrows, onEyebrows,
+  mouth,    onMouth,
+  nose,     onNose,
+  bangs,    onBangs,
+  hairBack, onHairBack,
+}) {
   return (
     <div className="wardrobe-panel">
-      <ItemRow
-        label="Hair Style"
-        items={HAIR_STYLES}
-        selected={hairStyle}
-        onSelect={onHairChange}
-      />
-      <ItemRow
-        label="Eye Shape"
-        items={EYE_SHAPES}
-        selected={eyeShape}
-        onSelect={onEyeChange}
-      />
-      <ItemRow
-        label="Tops"
-        items={TOPS}
-        selected={outfit.top}
-        onSelect={v => onOutfitChange({ top: v })}
-        allowNone
-      />
-      <ItemRow
-        label="Bottoms"
-        items={BOTTOMS}
-        selected={outfit.bottom}
-        onSelect={v => onOutfitChange({ bottom: v })}
-        allowNone
-      />
-      <ItemRow
-        label="Dresses"
-        items={DRESSES}
-        selected={outfit.dress}
-        onSelect={v => onOutfitChange({ dress: v })}
-        allowNone
-      />
-      <ItemRow
-        label="Accessories"
-        items={ACCESSORIES}
-        selected={outfit.accessory}
-        onSelect={v => onOutfitChange({ accessory: v })}
-        allowNone
-      />
+      <Section label="Hair Back" items={HAIR_BACK} selected={hairBack} onSelect={onHairBack} />
+      <Section label="Bangs"     items={BANGS}     selected={bangs}    onSelect={onBangs}    />
+      <Section label="Eyes"      items={EYES}      selected={eyes}     onSelect={onEyes}     />
+      <Section label="Eyebrows"  items={EYEBROWS}  selected={eyebrows} onSelect={onEyebrows} />
+      <Section label="Mouth"     items={MOUTH}     selected={mouth}    onSelect={onMouth}    />
+      <Section label="Nose"      items={NOSE}      selected={nose}     onSelect={onNose}     />
     </div>
   );
 }
