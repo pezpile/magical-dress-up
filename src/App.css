@@ -262,6 +262,47 @@
   cursor: pointer;
 }
 
+.draw-subtitle {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #9ab0c8;
+  margin-bottom: 6px;
+}
+
+.layer-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.layer-btn {
+  padding: 6px 4px;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #7a5570;
+  letter-spacing: 0.04em;
+  transition: all 0.15s;
+}
+
+.layer-btn:hover {
+  background: rgba(255, 215, 235, 0.75);
+  transform: scale(1.05);
+}
+
+.layer-btn.active {
+  border-color: #b8a0d8;
+  background: rgba(220, 200, 255, 0.35);
+  box-shadow: 0 0 0 3px rgba(200, 180, 255, 0.25);
+  color: #7050a0;
+}
+
 .draw-actions {
   display: flex;
   gap: 4px;

@@ -1,17 +1,8 @@
 import DrawingCanvas from './DrawingCanvas.jsx';
-
-// Eye sets: each entry pairs a sclera (fixed white) with an iris (color-tinted)
-// Add new eye styles here: EYES_ASSETS[n] = { sclera: '...', iris: '...' }
-const EYES_ASSETS = {
-  0: { sclera: '/assets/sclera1.png', iris: '/assets/eye1.png' },
-};
-
-// Other feature asset maps
-const EYEBROWS_ASSETS = { 0: '/assets/eyebrow1.png' };
-const MOUTH_ASSETS    = { 0: '/assets/mouth1.png'   };
-const NOSE_ASSETS     = { 0: '/assets/nose.png'     };
-const BANGS_ASSETS    = { 0: '/assets/bang1.png', 1: '/assets/bang2.png' };
-const HAIR_BACK_ASSETS = { 0: '/assets/hairback1.png' };
+import {
+  EYES_ASSETS, EYEBROWS_ASSETS, MOUTH_ASSETS,
+  NOSE_ASSETS, BANGS_ASSETS, HAIR_BACK_ASSETS,
+} from './assets.js';
 
 function hexToRgb(hex) {
   const h = hex.replace('#', '');
@@ -72,7 +63,7 @@ function Layer({ src, filterId }) {
 export default function CharacterPNG({
   skinColor, hairColor, eyeColor,
   eyes, eyebrows, mouth, nose, bangs, hairBack,
-  drawRef, drawTool, drawColor, brushSize,
+  drawRef, drawTool, drawColor, brushSize, maskSrcs,
 }) {
   const ids = {
     skin: `skin-${skinColor.replace('#', '')}`,
@@ -108,7 +99,7 @@ export default function CharacterPNG({
       {mouthSrc     && <Layer src={mouthSrc}      filterId={ids.skin}   />}
       {noseSrc      && <Layer src={noseSrc}       filterId={ids.skin}   />}
       {bangsSrc     && <Layer src={bangsSrc}      filterId={ids.hair}   />}
-      <DrawingCanvas ref={drawRef} tool={drawTool} color={drawColor} size={brushSize} />
+      <DrawingCanvas ref={drawRef} tool={drawTool} color={drawColor} size={brushSize} maskSrcs={maskSrcs} />
     </div>
   );
 }

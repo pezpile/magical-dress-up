@@ -1,19 +1,56 @@
-import { useRef, forwardRef, useImperativeHandle } from 'react';
+import { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 
 const CANVAS_SIZE = 1000;
 const MAX_HISTORY = 20;
 
-const DrawingCanvas = forwardRef(function DrawingCanvas({ tool, color, size }, ref) {
-  const canvasRef = useRef(null);
-  const isDrawing = useRef(false);
-  const lastPos = useRef(null);
-  const undoStack = useRef([]);
-  const redoStack = useRef([]);
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+const DrawingCanvas = forwardRef(function DrawingCanvas({ tool, color, size, maskSrcs }, ref) {
+  const canvasRef   = useRef(null);
+  const tempRef     = useRef(null); // offscreen stroke buffer
+  const maskRef     = useRef(null); // offscreen composited mask
+  const isDrawing   = useRef(false);
+  const lastPos     = useRef(null);
+  const undoStack   = useRef([]);
+  const redoStack   = useRef([]);
+
+  // Create temp canvas once
+  useEffect(() => {
+    const tc = document.createElement('canvas');
+    tc.width = CANVAS_SIZE;
+    tc.height = CANVAS_SIZE;
+    tempRef.current = tc;
+  }, []);
+
+  // Rebuild mask canvas when maskSrcs changes
+  useEffect(() => {
+    if (!maskSrcs || maskSrcs.length === 0) {
+      maskRef.current = null;
+      return;
+    }
+    let cancelled = false;
+    Promise.all(maskSrcs.map(loadImage)).then(imgs => {
+      if (cancelled) return;
+      const mc = document.createElement('canvas');
+      mc.width  = CANVAS_SIZE;
+      mc.height = CANVAS_SIZE;
+      const ctx = mc.getContext('2d');
+      imgs.forEach(img => ctx.drawImage(img, 0, 0, CANVAS_SIZE, CANVAS_SIZE));
+      maskRef.current = mc;
+    }).catch(() => { if (!cancelled) maskRef.current = null; });
+    return () => { cancelled = true; };
+  }, [maskSrcs]);
 
   function snapshot() {
     return canvasRef.current.getContext('2d').getImageData(0, 0, CANVAS_SIZE, CANVAS_SIZE);
   }
-
   function restore(data) {
     canvasRef.current.getContext('2d').putImageData(data, 0, 0);
   }
@@ -39,34 +76,56 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({ tool, color, size }, r
 
   function getPos(e) {
     const rect = canvasRef.current.getBoundingClientRect();
-    const src = e.touches ? e.touches[0] : e;
+    const src  = e.touches ? e.touches[0] : e;
     return {
       x: (src.clientX - rect.left) * (CANVAS_SIZE / rect.width),
-      y: (src.clientY - rect.top) * (CANVAS_SIZE / rect.height),
+      y: (src.clientY - rect.top)  * (CANVAS_SIZE / rect.height),
     };
   }
 
   function paint(from, to) {
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    const rect = canvas.getBoundingClientRect();
-    const scaledSize = size * (CANVAS_SIZE / rect.width);
+    const ctx    = canvas.getContext('2d');
+    const rect   = canvas.getBoundingClientRect();
+    const sw     = size * (CANVAS_SIZE / rect.width);
 
     if (tool === 'eraser') {
       ctx.globalCompositeOperation = 'destination-out';
       ctx.strokeStyle = 'rgba(0,0,0,1)';
-    } else {
+      ctx.lineWidth = sw;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(from.x, from.y);
+      ctx.lineTo(to.x, to.y);
+      ctx.stroke();
       ctx.globalCompositeOperation = 'source-over';
-      ctx.strokeStyle = color;
+      return;
     }
 
-    ctx.lineWidth = scaledSize;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.beginPath();
-    ctx.moveTo(from.x, from.y);
-    ctx.lineTo(to.x, to.y);
-    ctx.stroke();
+    // Draw stroke segment into temp buffer
+    const temp    = tempRef.current;
+    const tempCtx = temp.getContext('2d');
+    tempCtx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+    tempCtx.globalCompositeOperation = 'source-over';
+    tempCtx.strokeStyle = color;
+    tempCtx.lineWidth   = sw;
+    tempCtx.lineCap     = 'round';
+    tempCtx.lineJoin    = 'round';
+    tempCtx.beginPath();
+    tempCtx.moveTo(from.x, from.y);
+    tempCtx.lineTo(to.x, to.y);
+    tempCtx.stroke();
+
+    // Clip to mask if one is loaded
+    if (maskRef.current) {
+      tempCtx.globalCompositeOperation = 'destination-in';
+      tempCtx.drawImage(maskRef.current, 0, 0);
+      tempCtx.globalCompositeOperation = 'source-over';
+    }
+
+    // Merge clipped segment onto main canvas
+    ctx.drawImage(temp, 0, 0);
   }
 
   function onStart(e) {
@@ -103,6 +162,7 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({ tool, color, size }, r
         width: '100%', height: '100%',
         cursor: tool === 'eraser' ? 'cell' : 'crosshair',
         touchAction: 'none',
+        mixBlendMode: 'color',
       }}
       onMouseDown={onStart}
       onMouseMove={onMove}
