@@ -208,6 +208,35 @@
 .item-name  { font-size: 0.6rem; color: #5a7a9a; text-align: center; line-height: 1.2; }
 .none-btn   { font-size: 0.9rem; color: #a8c0d8; }
 
+.sock-toggle-row {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.sock-pos-btn {
+  flex: 1;
+  padding: 5px 4px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  font-size: 0.62rem;
+  color: #7a5570;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+.sock-pos-btn:hover {
+  background: rgba(255, 215, 235, 0.75);
+}
+
+.sock-pos-btn.selected {
+  border-color: #88b4e0;
+  background: rgba(180, 215, 245, 0.35);
+  color: #4a7ab0;
+}
+
 /* ── Draw panel ─────────────────────────────────────────────── */
 
 .draw-tools {

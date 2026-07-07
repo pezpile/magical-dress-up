@@ -3,8 +3,8 @@ import { HexColorPicker } from 'react-colorful';
 import CharacterPNG from './CharacterPNG.jsx';
 import Wardrobe from './Wardrobe.jsx';
 import {
-  EYES_ASSETS, EYEBROWS_ASSETS, MOUTH_ASSETS,
-  NOSE_ASSETS, BANGS_ASSETS, HAIR_BACK_ASSETS,
+  EYES_ASSETS, EYEBROWS_ASSETS, MOUTH_ASSETS, NOSE_ASSETS,
+  BANGS_ASSETS, HAIR_BACK_ASSETS, BUNS_ASSETS,
 } from './assets.js';
 import './App.css';
 
@@ -46,27 +46,46 @@ const LAYERS = [
 ];
 
 export default function App() {
+  // Colors
   const [skinColor, setSkinColor] = useState('#f5c5a3');
   const [hairColor, setHairColor] = useState('#5a2e1a');
   const [eyeColor,  setEyeColor]  = useState('#3b82f6');
 
+  // Face features
   const [eyes,     setEyes]     = useState(0);
   const [eyebrows, setEyebrows] = useState(0);
   const [mouth,    setMouth]    = useState(0);
   const [nose,     setNose]     = useState(0);
+
+  // Hair
   const [bangs,    setBangs]    = useState(0);
+  const [buns,     setBuns]     = useState(null);
   const [hairBack, setHairBack] = useState(0);
 
+  // Clothing
+  const [shirt,    setShirt]    = useState(null);
+  const [pant,     setPant]     = useState(null);
+  const [sock,     setSock]     = useState(null);
+  const [socksOver,setSocksOver]= useState(false);
+  const [shoe,     setShoe]     = useState(null);
+
+  // Accessories
+  const [necklace, setNecklace] = useState(null);
+  const [bracelet, setBracelet] = useState(null);
+  const [earring,  setEarring]  = useState(null);
+  const [hat,      setHat]      = useState(null);
+
+  // Drawing
   const drawRef   = useRef(null);
   const [drawTool,  setDrawTool]  = useState('brush');
   const [drawColor, setDrawColor] = useState('#e87cd4');
   const [brushSize, setBrushSize] = useState(12);
   const [drawLayer, setDrawLayer] = useState('free');
 
-  // Compute PNG mask sources for the selected layer
   const maskSrcs = useMemo(() => {
     if (drawLayer === 'hair') {
       const srcs = [];
+      if (buns     != null) srcs.push(BUNS_ASSETS[buns]);
       if (hairBack != null) srcs.push(HAIR_BACK_ASSETS[hairBack]);
       if (bangs    != null) srcs.push(BANGS_ASSETS[bangs]);
       if (eyebrows != null) srcs.push(EYEBROWS_ASSETS[eyebrows]);
@@ -83,8 +102,8 @@ export default function App() {
       if (!eyeSet) return [];
       return [eyeSet.sclera, eyeSet.iris];
     }
-    return []; // 'free' — no mask
-  }, [drawLayer, hairBack, bangs, eyebrows, mouth, nose, eyes]);
+    return [];
+  }, [drawLayer, buns, hairBack, bangs, eyebrows, mouth, nose, eyes]);
 
   return (
     <div className="app">
@@ -135,7 +154,6 @@ export default function App() {
               <button className="draw-action-btn" onClick={() => drawRef.current?.clear()}>✕ Clear</button>
             </div>
           </div>
-
         </div>
 
         {/* Center: Character stage */}
@@ -146,19 +164,15 @@ export default function App() {
             ))}
           </div>
           <CharacterPNG
-            skinColor={skinColor}
-            hairColor={hairColor}
-            eyeColor={eyeColor}
-            eyes={eyes}
-            eyebrows={eyebrows}
-            mouth={mouth}
-            nose={nose}
-            bangs={bangs}
-            hairBack={hairBack}
-            drawRef={drawRef}
-            drawTool={drawTool}
-            drawColor={drawColor}
-            brushSize={brushSize}
+            skinColor={skinColor} hairColor={hairColor} eyeColor={eyeColor}
+            eyes={eyes} eyebrows={eyebrows} mouth={mouth} nose={nose}
+            bangs={bangs} buns={buns} hairBack={hairBack}
+            shirt={shirt} pant={pant}
+            sock={sock} socksOver={socksOver} shoe={shoe}
+            necklace={necklace} bracelet={bracelet}
+            earring={earring} hat={hat}
+            drawRef={drawRef} drawTool={drawTool}
+            drawColor={drawColor} brushSize={brushSize}
             maskSrcs={maskSrcs}
           />
         </div>
@@ -170,7 +184,17 @@ export default function App() {
           mouth={mouth}       onMouth={setMouth}
           nose={nose}         onNose={setNose}
           bangs={bangs}       onBangs={setBangs}
+          buns={buns}         onBuns={setBuns}
           hairBack={hairBack} onHairBack={setHairBack}
+          shirt={shirt}       onShirt={setShirt}
+          pant={pant}         onPant={setPant}
+          sock={sock}         onSock={setSock}
+          socksOver={socksOver} onSocksOver={setSocksOver}
+          shoe={shoe}         onShoe={setShoe}
+          necklace={necklace} onNecklace={setNecklace}
+          bracelet={bracelet} onBracelet={setBracelet}
+          earring={earring}   onEarring={setEarring}
+          hat={hat}           onHat={setHat}
         />
       </main>
     </div>
