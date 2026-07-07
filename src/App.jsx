@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { HexColorPicker } from 'react-colorful';
 import CharacterPNG from './CharacterPNG.jsx';
 import Wardrobe from './Wardrobe.jsx';
@@ -38,11 +38,16 @@ function ColorSwatch({ label, color, onChange }) {
   );
 }
 
-const LAYERS = [
+const DRAW_LAYERS = [
   { id: 'free', label: 'Free' },
   { id: 'hair', label: 'Hair' },
   { id: 'skin', label: 'Skin' },
   { id: 'eyes', label: 'Eyes' },
+];
+
+// Default render order: index 0 renders first (behind), last renders in front
+const DEFAULT_LAYER_ORDER = [
+  'buns', 'hairBack', 'earring', 'sock', 'shoe', 'pant', 'shirt', 'necklace', 'bracelet', 'bangs', 'hat',
 ];
 
 export default function App() {
@@ -51,29 +56,33 @@ export default function App() {
   const [hairColor, setHairColor] = useState('#5a2e1a');
   const [eyeColor,  setEyeColor]  = useState('#3b82f6');
 
-  // Face features
+  // Fixed face features (not user-reorderable)
   const [eyes,     setEyes]     = useState(0);
   const [eyebrows, setEyebrows] = useState(0);
   const [mouth,    setMouth]    = useState(0);
   const [nose,     setNose]     = useState(0);
 
-  // Hair
-  const [bangs,    setBangs]    = useState(0);
-  const [buns,     setBuns]     = useState(null);
-  const [hairBack, setHairBack] = useState(0);
+  // Outfit items — null = not equipped
+  const [equipped, setEquipped] = useState({
+    buns:     null,
+    hairBack: 0,
+    bangs:    0,
+    earring:  null,
+    sock:     null,
+    shoe:     null,
+    pant:     null,
+    shirt:    null,
+    necklace: null,
+    bracelet: null,
+    hat:      null,
+  });
 
-  // Clothing
-  const [shirt,    setShirt]    = useState(null);
-  const [pant,     setPant]     = useState(null);
-  const [sock,     setSock]     = useState(null);
-  const [socksOver,setSocksOver]= useState(false);
-  const [shoe,     setShoe]     = useState(null);
+  // User-controlled render order (index 0 = behind, last = in front)
+  const [layerOrder, setLayerOrder] = useState(DEFAULT_LAYER_ORDER);
 
-  // Accessories
-  const [necklace, setNecklace] = useState(null);
-  const [bracelet, setBracelet] = useState(null);
-  const [earring,  setEarring]  = useState(null);
-  const [hat,      setHat]      = useState(null);
+  const handleEquip = useCallback((type, id) => {
+    setEquipped(prev => ({ ...prev, [type]: id }));
+  }, []);
 
   // Drawing
   const drawRef   = useRef(null);
@@ -84,26 +93,26 @@ export default function App() {
 
   const maskSrcs = useMemo(() => {
     if (drawLayer === 'hair') {
-      const srcs = [];
-      if (buns     != null) srcs.push(BUNS_ASSETS[buns]);
-      if (hairBack != null) srcs.push(HAIR_BACK_ASSETS[hairBack]);
-      if (bangs    != null) srcs.push(BANGS_ASSETS[bangs]);
-      if (eyebrows != null) srcs.push(EYEBROWS_ASSETS[eyebrows]);
-      return srcs.filter(Boolean);
+      return [
+        equipped.buns     != null ? BUNS_ASSETS[equipped.buns]?.src         : null,
+        equipped.hairBack != null ? HAIR_BACK_ASSETS[equipped.hairBack]?.src : null,
+        equipped.bangs    != null ? BANGS_ASSETS[equipped.bangs]?.src        : null,
+        eyebrows          != null ? EYEBROWS_ASSETS[eyebrows]?.src           : null,
+      ].filter(Boolean);
     }
     if (drawLayer === 'skin') {
-      const srcs = ['/assets/base.png'];
-      if (mouth != null) srcs.push(MOUTH_ASSETS[mouth]);
-      if (nose  != null) srcs.push(NOSE_ASSETS[nose]);
-      return srcs.filter(Boolean);
+      return [
+        '/assets/base.png',
+        mouth != null ? MOUTH_ASSETS[mouth]?.src : null,
+        nose  != null ? NOSE_ASSETS[nose]?.src   : null,
+      ].filter(Boolean);
     }
     if (drawLayer === 'eyes') {
       const eyeSet = eyes != null ? EYES_ASSETS[eyes] : null;
-      if (!eyeSet) return [];
-      return [eyeSet.sclera, eyeSet.iris];
+      return eyeSet ? [eyeSet.sclera, eyeSet.iris] : [];
     }
     return [];
-  }, [drawLayer, buns, hairBack, bangs, eyebrows, mouth, nose, eyes]);
+  }, [drawLayer, equipped, eyebrows, mouth, nose, eyes]);
 
   return (
     <div className="app">
@@ -131,7 +140,7 @@ export default function App() {
             </div>
             <h3 className="draw-subtitle">Clip to layer</h3>
             <div className="layer-selector">
-              {LAYERS.map(l => (
+              {DRAW_LAYERS.map(l => (
                 <button
                   key={l.id}
                   className={`layer-btn ${drawLayer === l.id ? 'active' : ''}`}
@@ -166,11 +175,7 @@ export default function App() {
           <CharacterPNG
             skinColor={skinColor} hairColor={hairColor} eyeColor={eyeColor}
             eyes={eyes} eyebrows={eyebrows} mouth={mouth} nose={nose}
-            bangs={bangs} buns={buns} hairBack={hairBack}
-            shirt={shirt} pant={pant}
-            sock={sock} socksOver={socksOver} shoe={shoe}
-            necklace={necklace} bracelet={bracelet}
-            earring={earring} hat={hat}
+            equipped={equipped} layerOrder={layerOrder}
             drawRef={drawRef} drawTool={drawTool}
             drawColor={drawColor} brushSize={brushSize}
             maskSrcs={maskSrcs}
@@ -183,18 +188,8 @@ export default function App() {
           eyebrows={eyebrows} onEyebrows={setEyebrows}
           mouth={mouth}       onMouth={setMouth}
           nose={nose}         onNose={setNose}
-          bangs={bangs}       onBangs={setBangs}
-          buns={buns}         onBuns={setBuns}
-          hairBack={hairBack} onHairBack={setHairBack}
-          shirt={shirt}       onShirt={setShirt}
-          pant={pant}         onPant={setPant}
-          sock={sock}         onSock={setSock}
-          socksOver={socksOver} onSocksOver={setSocksOver}
-          shoe={shoe}         onShoe={setShoe}
-          necklace={necklace} onNecklace={setNecklace}
-          bracelet={bracelet} onBracelet={setBracelet}
-          earring={earring}   onEarring={setEarring}
-          hat={hat}           onHat={setHat}
+          equipped={equipped} onEquip={handleEquip}
+          layerOrder={layerOrder} onReorderLayers={setLayerOrder}
         />
       </main>
     </div>

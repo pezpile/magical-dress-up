@@ -6,6 +6,24 @@ import {
   NECKLACE_ASSETS, BRACELET_ASSETS, EARRING_ASSETS, HAT_ASSETS,
 } from './assets.js';
 
+// Map layer type → asset lookup
+const ASSET_MAP = {
+  buns:     BUNS_ASSETS,
+  hairBack: HAIR_BACK_ASSETS,
+  bangs:    BANGS_ASSETS,
+  earring:  EARRING_ASSETS,
+  sock:     SOCK_ASSETS,
+  shoe:     SHOE_ASSETS,
+  pant:     PANT_ASSETS,
+  shirt:    SHIRT_ASSETS,
+  necklace: NECKLACE_ASSETS,
+  bracelet: BRACELET_ASSETS,
+  hat:      HAT_ASSETS,
+};
+
+// Which layer types use the hair color filter
+const HAIR_TYPES = new Set(['buns', 'hairBack', 'bangs']);
+
 function hexToRgb(hex) {
   const h = hex.replace('#', '');
   return [
@@ -15,7 +33,6 @@ function hexToRgb(hex) {
   ];
 }
 
-// Standard tint — scale=2 maps 50%-gray base to the full target color
 function MatrixFilter({ id, color, scale = 2 }) {
   const [r, g, b] = hexToRgb(color);
   const s = scale;
@@ -27,7 +44,6 @@ function MatrixFilter({ id, color, scale = 2 }) {
   );
 }
 
-// Eye iris tint — black lashes stay black, gray iris → eyeColor, white stays white
 function EyeFilter({ id, color }) {
   const [r, g, b] = hexToRgb(color);
   return (
@@ -41,7 +57,6 @@ function EyeFilter({ id, color }) {
   );
 }
 
-// Forces every non-transparent pixel to pure white
 const WHITEN_ID = 'whiten-sclera';
 function WhitenFilter() {
   return (
@@ -64,10 +79,8 @@ function Layer({ src, filterId }) {
 
 export default function CharacterPNG({
   skinColor, hairColor, eyeColor,
-  eyes, eyebrows, mouth, nose, bangs, hairBack,
-  buns,
-  shirt, pant, sock, socksOver, shoe,
-  necklace, bracelet, earring, hat,
+  eyes, eyebrows, mouth, nose,   // fixed face features
+  equipped, layerOrder,          // user-controlled outfit layers
   drawRef, drawTool, drawColor, brushSize, maskSrcs,
 }) {
   const ids = {
@@ -76,21 +89,10 @@ export default function CharacterPNG({
     eye:  `eye-${eyeColor.replace('#', '')}`,
   };
 
-  const eyeSet      = eyes      != null ? EYES_ASSETS[eyes]            : null;
-  const eyebrowSrc  = eyebrows  != null ? EYEBROWS_ASSETS[eyebrows]    : null;
-  const mouthSrc    = mouth     != null ? MOUTH_ASSETS[mouth]          : null;
-  const noseSrc     = nose      != null ? NOSE_ASSETS[nose]            : null;
-  const bangsSrc    = bangs     != null ? BANGS_ASSETS[bangs]          : null;
-  const hairBackSrc = hairBack  != null ? HAIR_BACK_ASSETS[hairBack]   : null;
-  const bunsSrc     = buns      != null ? BUNS_ASSETS[buns]            : null;
-  const shirtSrc    = shirt     != null ? SHIRT_ASSETS[shirt]          : null;
-  const pantSrc     = pant      != null ? PANT_ASSETS[pant]            : null;
-  const sockSrc     = sock      != null ? SOCK_ASSETS[sock]            : null;
-  const shoeSrc     = shoe      != null ? SHOE_ASSETS[shoe]            : null;
-  const necklaceSrc = necklace  != null ? NECKLACE_ASSETS[necklace]    : null;
-  const braceletSrc = bracelet  != null ? BRACELET_ASSETS[bracelet]    : null;
-  const earringSrc  = earring   != null ? EARRING_ASSETS[earring]      : null;
-  const hatSrc      = hat       != null ? HAT_ASSETS[hat]              : null;
+  const eyeSet     = eyes     != null ? EYES_ASSETS[eyes]              : null;
+  const eyebrowSrc = eyebrows != null ? EYEBROWS_ASSETS[eyebrows]?.src : null;
+  const mouthSrc   = mouth    != null ? MOUTH_ASSETS[mouth]?.src       : null;
+  const noseSrc    = nose     != null ? NOSE_ASSETS[nose]?.src         : null;
 
   return (
     <div className="character-group">
@@ -104,29 +106,28 @@ export default function CharacterPNG({
         </defs>
       </svg>
 
-      {/* Layer order (bottom → top):
-          buns → hairBack → base → sclera → iris → brows → mouth → nose →
-          earrings → [sock under] → shoe → [sock over] → pant → shirt →
-          necklace → bracelet → bangs → hat → drawing canvas            */}
-
-      {bunsSrc      && <Layer src={bunsSrc}        filterId={ids.hair}   />}
-      {hairBackSrc  && <Layer src={hairBackSrc}    filterId={ids.hair}   />}
-                       <Layer src="/assets/base.png" filterId={ids.skin} />
+      {/* Fixed base layers — always in this order, never user-reorderable */}
+      <Layer src="/assets/base.png"     filterId={ids.skin}   />
       {eyeSet?.sclera && <Layer src={eyeSet.sclera} filterId={WHITEN_ID} />}
       {eyeSet?.iris   && <Layer src={eyeSet.iris}   filterId={ids.eye}   />}
-      {eyebrowSrc   && <Layer src={eyebrowSrc}     filterId={ids.hair}   />}
-      {mouthSrc     && <Layer src={mouthSrc}       filterId={ids.skin}   />}
-      {noseSrc      && <Layer src={noseSrc}        filterId={ids.skin}   />}
-      {earringSrc   && <Layer src={earringSrc}                           />}
-      {!socksOver && sockSrc && <Layer src={sockSrc}                     />}
-      {shoeSrc      && <Layer src={shoeSrc}                              />}
-      {socksOver  && sockSrc && <Layer src={sockSrc}                     />}
-      {pantSrc      && <Layer src={pantSrc}                              />}
-      {shirtSrc     && <Layer src={shirtSrc}                             />}
-      {necklaceSrc  && <Layer src={necklaceSrc}                          />}
-      {braceletSrc  && <Layer src={braceletSrc}                          />}
-      {bangsSrc     && <Layer src={bangsSrc}       filterId={ids.hair}   />}
-      {hatSrc       && <Layer src={hatSrc}                               />}
+      {eyebrowSrc   && <Layer src={eyebrowSrc}   filterId={ids.hair}   />}
+      {mouthSrc     && <Layer src={mouthSrc}     filterId={ids.skin}   />}
+      {noseSrc      && <Layer src={noseSrc}      filterId={ids.skin}   />}
+
+      {/* User-ordered outfit layers — layerOrder[0] renders first (behind) */}
+      {layerOrder.map(type => {
+        const id = equipped[type];
+        if (id == null) return null;
+        const asset = ASSET_MAP[type]?.[id];
+        if (!asset) return null;
+        return (
+          <Layer
+            key={type}
+            src={asset.src}
+            filterId={HAIR_TYPES.has(type) ? ids.hair : undefined}
+          />
+        );
+      })}
 
       <DrawingCanvas
         ref={drawRef}
