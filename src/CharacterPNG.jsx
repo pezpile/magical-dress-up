@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import DrawingCanvas from './DrawingCanvas.jsx';
 import {
   EYES_ASSETS, EYEBROWS_ASSETS, MOUTH_ASSETS, NOSE_ASSETS,
@@ -6,8 +7,10 @@ import {
   NECKLACE_ASSETS, BRACELET_ASSETS, EARRING_ASSETS, HAT_ASSETS,
 } from './assets.js';
 
-// Map layer type → asset lookup
 const ASSET_MAP = {
+  eyebrows: EYEBROWS_ASSETS,
+  mouth:    MOUTH_ASSETS,
+  nose:     NOSE_ASSETS,
   buns:     BUNS_ASSETS,
   hairBack: HAIR_BACK_ASSETS,
   bangs:    BANGS_ASSETS,
@@ -21,8 +24,8 @@ const ASSET_MAP = {
   hat:      HAT_ASSETS,
 };
 
-// Which layer types use the hair color filter
-const HAIR_TYPES = new Set(['buns', 'hairBack', 'bangs']);
+const HAIR_TYPES = new Set(['buns', 'hairBack', 'bangs', 'eyebrows']);
+const SKIN_TYPES = new Set(['mouth', 'nose']);
 
 function hexToRgb(hex) {
   const h = hex.replace('#', '');
@@ -79,8 +82,7 @@ function Layer({ src, filterId }) {
 
 export default function CharacterPNG({
   skinColor, hairColor, eyeColor,
-  eyes, eyebrows, mouth, nose,   // fixed face features
-  equipped, layerOrder,          // user-controlled outfit layers
+  equipped, layerOrder,
   drawRef, drawTool, drawColor, brushSize, maskSrcs,
 }) {
   const ids = {
@@ -88,11 +90,6 @@ export default function CharacterPNG({
     hair: `hair-${hairColor.replace('#', '')}`,
     eye:  `eye-${eyeColor.replace('#', '')}`,
   };
-
-  const eyeSet     = eyes     != null ? EYES_ASSETS[eyes]              : null;
-  const eyebrowSrc = eyebrows != null ? EYEBROWS_ASSETS[eyebrows]?.src : null;
-  const mouthSrc   = mouth    != null ? MOUTH_ASSETS[mouth]?.src       : null;
-  const noseSrc    = nose     != null ? NOSE_ASSETS[nose]?.src         : null;
 
   return (
     <div className="character-group">
@@ -106,27 +103,31 @@ export default function CharacterPNG({
         </defs>
       </svg>
 
-      {/* Fixed base layers — always in this order, never user-reorderable */}
-      <Layer src="/assets/base.png"     filterId={ids.skin}   />
-      {eyeSet?.sclera && <Layer src={eyeSet.sclera} filterId={WHITEN_ID} />}
-      {eyeSet?.iris   && <Layer src={eyeSet.iris}   filterId={ids.eye}   />}
-      {eyebrowSrc   && <Layer src={eyebrowSrc}   filterId={ids.hair}   />}
-      {mouthSrc     && <Layer src={mouthSrc}     filterId={ids.skin}   />}
-      {noseSrc      && <Layer src={noseSrc}      filterId={ids.skin}   />}
-
-      {/* User-ordered outfit layers — layerOrder[0] renders first (behind) */}
       {layerOrder.map(type => {
         const id = equipped[type];
         if (id == null) return null;
+
+        if (type === 'base') {
+          return <Layer key="base" src="/assets/base.png" filterId={ids.skin} />;
+        }
+
+        if (type === 'eyes') {
+          const eyeSet = EYES_ASSETS[id];
+          if (!eyeSet) return null;
+          return (
+            <Fragment key="eyes">
+              <Layer src={eyeSet.sclera} filterId={WHITEN_ID} />
+              <Layer src={eyeSet.iris}   filterId={ids.eye}   />
+            </Fragment>
+          );
+        }
+
         const asset = ASSET_MAP[type]?.[id];
         if (!asset) return null;
-        return (
-          <Layer
-            key={type}
-            src={asset.src}
-            filterId={HAIR_TYPES.has(type) ? ids.hair : undefined}
-          />
-        );
+        const filterId = HAIR_TYPES.has(type) ? ids.hair
+                       : SKIN_TYPES.has(type) ? ids.skin
+                       : undefined;
+        return <Layer key={type} src={asset.src} filterId={filterId} />;
       })}
 
       <DrawingCanvas

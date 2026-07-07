@@ -11,8 +11,6 @@ import {
 } from './assets.js';
 
 // ── Thumbnail crop helpers ────────────────────────────────────────────────────
-// For each item type, we store focal point (cx%, cy%) + zoom.
-// The CSS formula centers the focal point in the thumbnail box.
 function thumbCss(cx, cy, zoom) {
   const x = ((0.5 - (cx / 100) * zoom) / (1 - zoom)) * 100;
   const y = ((0.5 - (cy / 100) * zoom) / (1 - zoom)) * 100;
@@ -20,13 +18,14 @@ function thumbCss(cx, cy, zoom) {
 }
 
 const THUMB = {
-  bangs:    thumbCss(50, 18,  5),
-  hairBack: thumbCss(50, 15,  4),
-  buns:     thumbCss(49, 15,  5),
+  base:     thumbCss(50, 50,  2),
   eyes:     thumbCss(49, 33,  7),
   eyebrows: thumbCss(49, 29,  8),
   nose:     thumbCss(50, 41, 12),
   mouth:    thumbCss(50, 47, 10),
+  bangs:    thumbCss(50, 18,  5),
+  hairBack: thumbCss(50, 15,  4),
+  buns:     thumbCss(49, 15,  5),
   shirt:    thumbCss(47, 49,  5),
   pant:     thumbCss(49, 57,  8),
   sock:     thumbCss(48, 75,  7),
@@ -37,16 +36,30 @@ const THUMB = {
   hat:      thumbCss(48, 16,  6),
 };
 
-// Labels shown in the layer panel
 const LAYER_LABELS = {
-  buns: 'Buns', hairBack: 'Hair Back', bangs: 'Bangs',
-  earring: 'Earrings', sock: 'Socks', shoe: 'Shoes',
-  pant: 'Bottoms', shirt: 'Tops',
-  necklace: 'Necklace', bracelet: 'Bracelet', hat: 'Hat',
+  base:     'Base',
+  eyes:     'Eyes',
+  eyebrows: 'Eyebrows',
+  mouth:    'Mouth',
+  nose:     'Nose',
+  buns:     'Buns',
+  hairBack: 'Hair Back',
+  bangs:    'Bangs',
+  earring:  'Earrings',
+  sock:     'Socks',
+  shoe:     'Shoes',
+  pant:     'Bottoms',
+  shirt:    'Tops',
+  necklace: 'Necklace',
+  bracelet: 'Bracelet',
+  hat:      'Hat',
 };
 
-// Asset map per layer type (matches CharacterPNG's ASSET_MAP)
 const WARDROBE_ASSET_MAP = {
+  eyes:     EYES_ASSETS,
+  eyebrows: EYEBROWS_ASSETS,
+  mouth:    MOUTH_ASSETS,
+  nose:     NOSE_ASSETS,
   buns:     BUNS_ASSETS,
   hairBack: HAIR_BACK_ASSETS,
   bangs:    BANGS_ASSETS,
@@ -60,10 +73,14 @@ const WARDROBE_ASSET_MAP = {
   hat:      HAT_ASSETS,
 };
 
-function getThumbSrc(assetMap, id) {
-  const a = assetMap?.[id];
+// Returns the display thumbnail src for a given layer type + equipped id.
+// Eyes use .iris (the colored layer), base is hardcoded, others use .src.
+function getLayerThumbSrc(type, id) {
+  if (type === 'base') return '/assets/base.png';
+  if (id == null) return null;
+  const a = WARDROBE_ASSET_MAP[type]?.[id];
   if (!a) return null;
-  return a.src || a.iris || a.sclera || null;
+  return a.iris || a.src || null;
 }
 
 // ── Layer panel (drag-to-reorder) ────────────────────────────────────────────
@@ -71,17 +88,8 @@ function LayerPanel({ layerOrder, equipped, onReorder }) {
   const [dragType, setDragType] = useState(null);
   const [overType, setOverType] = useState(null);
 
-  // Show only equipped items, displayed front-to-back (top = in front)
+  // Display front-to-back (top of list = in front). Always show base.
   const displayed = [...layerOrder].reverse().filter(t => equipped[t] != null);
-
-  if (displayed.length === 0) {
-    return (
-      <div className="wardrobe-section layer-panel">
-        <h3>Layers</h3>
-        <p className="layer-empty">Equip items below to manage layers</p>
-      </div>
-    );
-  }
 
   function onDragStart(e, type) {
     setDragType(type);
@@ -111,34 +119,40 @@ function LayerPanel({ layerOrder, equipped, onReorder }) {
   return (
     <div className="wardrobe-section layer-panel">
       <h3>Layers <span className="layer-hint">↑ front · behind ↓</span></h3>
-      <div className="layer-list">
-        {displayed.map(type => {
-          const src = getThumbSrc(WARDROBE_ASSET_MAP[type], equipped[type]);
-          const isDragging = dragType === type;
-          const isOver     = overType === type;
-          return (
-            <div
-              key={type}
-              className={`layer-row${isDragging ? ' dragging' : ''}${isOver ? ' drag-over' : ''}`}
-              draggable
-              onDragStart={e => onDragStart(e, type)}
-              onDragOver={e => onDragOver(e, type)}
-              onDrop={e => onDrop(e, type)}
-              onDragEnd={reset}
-              onDragLeave={() => setOverType(null)}
-            >
-              <span className="drag-handle">⠿</span>
-              {src && (
-                <div
-                  className="layer-thumb"
-                  style={{ backgroundImage: `url(${src})`, ...THUMB[type] }}
-                />
-              )}
-              <span className="layer-label">{LAYER_LABELS[type]}</span>
-            </div>
-          );
-        })}
-      </div>
+      {displayed.length === 0 ? (
+        <p className="layer-empty">Equip items below to manage layers</p>
+      ) : (
+        <div className="layer-list">
+          {displayed.map(type => {
+            const src = getLayerThumbSrc(type, equipped[type]);
+            return (
+              <div
+                key={type}
+                className={[
+                  'layer-row',
+                  dragType === type ? 'dragging' : '',
+                  overType === type ? 'drag-over' : '',
+                ].filter(Boolean).join(' ')}
+                draggable
+                onDragStart={e => onDragStart(e, type)}
+                onDragOver={e => onDragOver(e, type)}
+                onDrop={e => onDrop(e, type)}
+                onDragEnd={reset}
+                onDragLeave={() => setOverType(null)}
+              >
+                <span className="drag-handle">⠿</span>
+                {src && (
+                  <div
+                    className="layer-thumb"
+                    style={{ backgroundImage: `url(${src})`, ...THUMB[type] }}
+                  />
+                )}
+                <span className="layer-label">{LAYER_LABELS[type]}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -164,7 +178,7 @@ function ThumbBtn({ src, thumbKey, name, selected, onClick }) {
 }
 
 // ── Generic wardrobe section ──────────────────────────────────────────────────
-function Section({ label, thumbKey, items, assetMap, selected, onSelect, getThumb }) {
+function Section({ label, thumbKey, items, selected, onSelect, getThumbSrc }) {
   return (
     <div className="wardrobe-section">
       <h3>{label}</h3>
@@ -177,7 +191,7 @@ function Section({ label, thumbKey, items, assetMap, selected, onSelect, getThum
         {items.map(item => (
           <ThumbBtn
             key={item.id}
-            src={getThumb ? getThumb(item.id) : getThumbSrc(assetMap, item.id)}
+            src={getThumbSrc(item.id)}
             thumbKey={thumbKey}
             name={item.name}
             selected={selected === item.id}
@@ -190,48 +204,61 @@ function Section({ label, thumbKey, items, assetMap, selected, onSelect, getThum
 }
 
 // ── Main wardrobe component ───────────────────────────────────────────────────
-export default function Wardrobe({
-  eyes, onEyes, eyebrows, onEyebrows, mouth, onMouth, nose, onNose,
-  equipped, onEquip,
-  layerOrder, onReorderLayers,
-}) {
+export default function Wardrobe({ equipped, onEquip, layerOrder, onReorderLayers }) {
+  // Toggle: clicking selected item unequips it
   const eq = (type, id) => onEquip(type, equipped[type] === id ? null : id);
+
+  const thumbSrc = (type, id) => getLayerThumbSrc(type, id);
 
   return (
     <div className="wardrobe-panel">
       <LayerPanel layerOrder={layerOrder} equipped={equipped} onReorder={onReorderLayers} />
 
-      <Section label="Eyes"      thumbKey="eyes"     items={EYES}      assetMap={EYES_ASSETS}
-        getThumb={id => EYES_ASSETS[id]?.iris}
-        selected={eyes}     onSelect={onEyes}     />
-      <Section label="Eyebrows"  thumbKey="eyebrows" items={EYEBROWS}  assetMap={EYEBROWS_ASSETS}
-        selected={eyebrows} onSelect={onEyebrows} />
-      <Section label="Nose"      thumbKey="nose"     items={NOSE}      assetMap={NOSE_ASSETS}
-        selected={nose}     onSelect={onNose}     />
-      <Section label="Mouth"     thumbKey="mouth"    items={MOUTH}     assetMap={MOUTH_ASSETS}
-        selected={mouth}    onSelect={onMouth}    />
-      <Section label="Bangs"     thumbKey="bangs"    items={BANGS}     assetMap={BANGS_ASSETS}
-        selected={equipped.bangs}    onSelect={id => eq('bangs', id)}    />
-      <Section label="Buns"      thumbKey="buns"     items={BUNS}      assetMap={BUNS_ASSETS}
-        selected={equipped.buns}     onSelect={id => eq('buns', id)}     />
-      <Section label="Hair Back" thumbKey="hairBack" items={HAIR_BACK} assetMap={HAIR_BACK_ASSETS}
+      <Section label="Eyes"      thumbKey="eyes"     items={EYES}
+        getThumbSrc={id => thumbSrc('eyes',     id)}
+        selected={equipped.eyes}     onSelect={id => eq('eyes',     id)} />
+      <Section label="Eyebrows"  thumbKey="eyebrows" items={EYEBROWS}
+        getThumbSrc={id => thumbSrc('eyebrows', id)}
+        selected={equipped.eyebrows} onSelect={id => eq('eyebrows', id)} />
+      <Section label="Nose"      thumbKey="nose"     items={NOSE}
+        getThumbSrc={id => thumbSrc('nose',     id)}
+        selected={equipped.nose}     onSelect={id => eq('nose',     id)} />
+      <Section label="Mouth"     thumbKey="mouth"    items={MOUTH}
+        getThumbSrc={id => thumbSrc('mouth',    id)}
+        selected={equipped.mouth}    onSelect={id => eq('mouth',    id)} />
+      <Section label="Bangs"     thumbKey="bangs"    items={BANGS}
+        getThumbSrc={id => thumbSrc('bangs',    id)}
+        selected={equipped.bangs}    onSelect={id => eq('bangs',    id)} />
+      <Section label="Buns"      thumbKey="buns"     items={BUNS}
+        getThumbSrc={id => thumbSrc('buns',     id)}
+        selected={equipped.buns}     onSelect={id => eq('buns',     id)} />
+      <Section label="Hair Back" thumbKey="hairBack" items={HAIR_BACK}
+        getThumbSrc={id => thumbSrc('hairBack', id)}
         selected={equipped.hairBack} onSelect={id => eq('hairBack', id)} />
-      <Section label="Hat"       thumbKey="hat"      items={HATS}      assetMap={HAT_ASSETS}
-        selected={equipped.hat}      onSelect={id => eq('hat', id)}      />
-      <Section label="Earrings"  thumbKey="earring"  items={EARRINGS}  assetMap={EARRING_ASSETS}
-        selected={equipped.earring}  onSelect={id => eq('earring', id)}  />
-      <Section label="Necklace"  thumbKey="necklace" items={NECKLACES} assetMap={NECKLACE_ASSETS}
+      <Section label="Hat"       thumbKey="hat"      items={HATS}
+        getThumbSrc={id => thumbSrc('hat',      id)}
+        selected={equipped.hat}      onSelect={id => eq('hat',      id)} />
+      <Section label="Earrings"  thumbKey="earring"  items={EARRINGS}
+        getThumbSrc={id => thumbSrc('earring',  id)}
+        selected={equipped.earring}  onSelect={id => eq('earring',  id)} />
+      <Section label="Necklace"  thumbKey="necklace" items={NECKLACES}
+        getThumbSrc={id => thumbSrc('necklace', id)}
         selected={equipped.necklace} onSelect={id => eq('necklace', id)} />
-      <Section label="Bracelet"  thumbKey="bracelet" items={BRACELETS} assetMap={BRACELET_ASSETS}
+      <Section label="Bracelet"  thumbKey="bracelet" items={BRACELETS}
+        getThumbSrc={id => thumbSrc('bracelet', id)}
         selected={equipped.bracelet} onSelect={id => eq('bracelet', id)} />
-      <Section label="Tops"      thumbKey="shirt"    items={SHIRTS}    assetMap={SHIRT_ASSETS}
-        selected={equipped.shirt}    onSelect={id => eq('shirt', id)}    />
-      <Section label="Bottoms"   thumbKey="pant"     items={PANTS}     assetMap={PANT_ASSETS}
-        selected={equipped.pant}     onSelect={id => eq('pant', id)}     />
-      <Section label="Socks"     thumbKey="sock"     items={SOCKS}     assetMap={SOCK_ASSETS}
-        selected={equipped.sock}     onSelect={id => eq('sock', id)}     />
-      <Section label="Shoes"     thumbKey="shoe"     items={SHOES}     assetMap={SHOE_ASSETS}
-        selected={equipped.shoe}     onSelect={id => eq('shoe', id)}     />
+      <Section label="Tops"      thumbKey="shirt"    items={SHIRTS}
+        getThumbSrc={id => thumbSrc('shirt',    id)}
+        selected={equipped.shirt}    onSelect={id => eq('shirt',    id)} />
+      <Section label="Bottoms"   thumbKey="pant"     items={PANTS}
+        getThumbSrc={id => thumbSrc('pant',     id)}
+        selected={equipped.pant}     onSelect={id => eq('pant',     id)} />
+      <Section label="Socks"     thumbKey="sock"     items={SOCKS}
+        getThumbSrc={id => thumbSrc('sock',     id)}
+        selected={equipped.sock}     onSelect={id => eq('sock',     id)} />
+      <Section label="Shoes"     thumbKey="shoe"     items={SHOES}
+        getThumbSrc={id => thumbSrc('shoe',     id)}
+        selected={equipped.shoe}     onSelect={id => eq('shoe',     id)} />
     </div>
   );
 }

@@ -1,3 +1,6 @@
+// Base body — always equipped, kept separate so CharacterPNG can special-case it
+export const BASE_ASSETS = { 0: { src: '/assets/base.png' } };
+
 // Eye sets — { sclera, iris } paths (CharacterPNG accesses these directly)
 export const EYES_ASSETS = {
   0: { sclera: '/assets/eyes/sclera1.png', iris: '/assets/eyes/eye1.png' },

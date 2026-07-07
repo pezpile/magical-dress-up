@@ -47,23 +47,36 @@ const DRAW_LAYERS = [
 
 // Default render order: index 0 renders first (behind), last renders in front
 const DEFAULT_LAYER_ORDER = [
-  'buns', 'hairBack', 'earring', 'sock', 'shoe', 'pant', 'shirt', 'necklace', 'bracelet', 'bangs', 'hat',
+  'base',
+  'buns',
+  'hairBack',
+  'eyes',
+  'eyebrows',
+  'mouth',
+  'nose',
+  'earring',
+  'sock',
+  'shoe',
+  'pant',
+  'shirt',
+  'necklace',
+  'bracelet',
+  'bangs',
+  'hat',
 ];
 
 export default function App() {
-  // Colors
   const [skinColor, setSkinColor] = useState('#f5c5a3');
   const [hairColor, setHairColor] = useState('#5a2e1a');
   const [eyeColor,  setEyeColor]  = useState('#3b82f6');
 
-  // Fixed face features (not user-reorderable)
-  const [eyes,     setEyes]     = useState(0);
-  const [eyebrows, setEyebrows] = useState(0);
-  const [mouth,    setMouth]    = useState(0);
-  const [nose,     setNose]     = useState(0);
-
-  // Outfit items — null = not equipped
+  // All layers unified — null = not equipped; base is always 0
   const [equipped, setEquipped] = useState({
+    base:     0,
+    eyes:     0,
+    eyebrows: 0,
+    mouth:    0,
+    nose:     0,
     buns:     null,
     hairBack: 0,
     bangs:    0,
@@ -77,10 +90,10 @@ export default function App() {
     hat:      null,
   });
 
-  // User-controlled render order (index 0 = behind, last = in front)
   const [layerOrder, setLayerOrder] = useState(DEFAULT_LAYER_ORDER);
 
   const handleEquip = useCallback((type, id) => {
+    if (type === 'base') return;
     setEquipped(prev => ({ ...prev, [type]: id }));
   }, []);
 
@@ -97,27 +110,26 @@ export default function App() {
         equipped.buns     != null ? BUNS_ASSETS[equipped.buns]?.src         : null,
         equipped.hairBack != null ? HAIR_BACK_ASSETS[equipped.hairBack]?.src : null,
         equipped.bangs    != null ? BANGS_ASSETS[equipped.bangs]?.src        : null,
-        eyebrows          != null ? EYEBROWS_ASSETS[eyebrows]?.src           : null,
+        equipped.eyebrows != null ? EYEBROWS_ASSETS[equipped.eyebrows]?.src  : null,
       ].filter(Boolean);
     }
     if (drawLayer === 'skin') {
       return [
         '/assets/base.png',
-        mouth != null ? MOUTH_ASSETS[mouth]?.src : null,
-        nose  != null ? NOSE_ASSETS[nose]?.src   : null,
+        equipped.mouth != null ? MOUTH_ASSETS[equipped.mouth]?.src : null,
+        equipped.nose  != null ? NOSE_ASSETS[equipped.nose]?.src   : null,
       ].filter(Boolean);
     }
     if (drawLayer === 'eyes') {
-      const eyeSet = eyes != null ? EYES_ASSETS[eyes] : null;
+      const eyeSet = equipped.eyes != null ? EYES_ASSETS[equipped.eyes] : null;
       return eyeSet ? [eyeSet.sclera, eyeSet.iris] : [];
     }
     return [];
-  }, [drawLayer, equipped, eyebrows, mouth, nose, eyes]);
+  }, [drawLayer, equipped]);
 
   return (
     <div className="app">
       <main className="main-content">
-        {/* Left: Color + Draw controls */}
         <div className="color-panel">
           <div className="panel-card">
             <h2 className="panel-title">Colors</h2>
@@ -165,7 +177,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* Center: Character stage */}
         <div className="character-stage">
           <div className="stage-sparkles" aria-hidden="true">
             {['✦','✧','✦','✧','✦','✧'].map((s, i) => (
@@ -174,7 +185,6 @@ export default function App() {
           </div>
           <CharacterPNG
             skinColor={skinColor} hairColor={hairColor} eyeColor={eyeColor}
-            eyes={eyes} eyebrows={eyebrows} mouth={mouth} nose={nose}
             equipped={equipped} layerOrder={layerOrder}
             drawRef={drawRef} drawTool={drawTool}
             drawColor={drawColor} brushSize={brushSize}
@@ -182,12 +192,7 @@ export default function App() {
           />
         </div>
 
-        {/* Right: Wardrobe */}
         <Wardrobe
-          eyes={eyes}         onEyes={setEyes}
-          eyebrows={eyebrows} onEyebrows={setEyebrows}
-          mouth={mouth}       onMouth={setMouth}
-          nose={nose}         onNose={setNose}
           equipped={equipped} onEquip={handleEquip}
           layerOrder={layerOrder} onReorderLayers={setLayerOrder}
         />
