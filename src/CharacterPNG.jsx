@@ -86,7 +86,7 @@ function Layer({ src, filterId }) {
 
 export default function CharacterPNG({
   skinColor, hairColor, eyeColor,
-  equipped, layerOrder,
+  layers,
   drawRef, drawTool, drawColor, brushSize, maskSrcs,
 }) {
   const ids = {
@@ -107,31 +107,26 @@ export default function CharacterPNG({
         </defs>
       </svg>
 
-      {layerOrder.map(type => {
-        const id = equipped[type];
-        if (id == null) return null;
-
+      {layers.map(({ key, type, id }) => {
         if (type === 'base') {
-          return <Layer key="base" src="/assets/base.png" filterId={ids.skin} />;
+          return <Layer key={key} src="/assets/base.png" filterId={ids.skin} />;
         }
-
         if (type === 'eyes') {
           const eyeSet = EYES_ASSETS[id];
           if (!eyeSet) return null;
           return (
-            <Fragment key="eyes">
+            <Fragment key={key}>
               <Layer src={eyeSet.sclera} filterId={WHITEN_ID} />
               <Layer src={eyeSet.iris}   filterId={ids.eye}   />
             </Fragment>
           );
         }
-
         const asset = ASSET_MAP[type]?.[id];
         if (!asset) return null;
         const filterId = HAIR_TYPES.has(type) ? ids.hair
                        : SKIN_TYPES.has(type) ? ids.skin
                        : undefined;
-        return <Layer key={type} src={asset.src} filterId={filterId} />;
+        return <Layer key={key} src={asset.src} filterId={filterId} />;
       })}
 
       <DrawingCanvas

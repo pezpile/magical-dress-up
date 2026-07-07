@@ -1,12 +1,15 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { HexColorPicker } from 'react-colorful';
 import CharacterPNG from './CharacterPNG.jsx';
-import Wardrobe from './Wardrobe.jsx';
+import Wardrobe, { LayerPanel } from './Wardrobe.jsx';
 import {
   EYES_ASSETS, EYEBROWS_ASSETS, MOUTH_ASSETS, NOSE_ASSETS,
   BANGS_ASSETS, HAIR_BACK_ASSETS, BUNS_ASSETS,
 } from './assets.js';
 import './App.css';
+
+// Types where only one instance is ever shown (replacing, not stacking)
+const SINGLETON_TYPES = new Set(['base', 'eyes', 'eyebrows', 'mouth', 'nose']);
 
 function ColorSwatch({ label, color, onChange }) {
   const [open, setOpen] = useState(false);
@@ -45,62 +48,42 @@ const DRAW_LAYERS = [
   { id: 'eyes', label: 'Eyes' },
 ];
 
-// Default render order: index 0 renders first (behind), last renders in front
-const DEFAULT_LAYER_ORDER = [
-  'base',
-  'buns',
-  'hairBack',
-  'eyes',
-  'eyebrows',
-  'mouth',
-  'nose',
-  'earring',
-  'ring',
-  'sock',
-  'shoe',
-  'pant',
-  'belt',
-  'shirt',
-  'necklace',
-  'bracelet',
-  'bangs',
-  'hairclip',
-  'hat',
-];
-
 export default function App() {
   const [skinColor, setSkinColor] = useState('#f5c5a3');
   const [hairColor, setHairColor] = useState('#5a2e1a');
   const [eyeColor,  setEyeColor]  = useState('#3b82f6');
 
-  // All layers unified — null = not equipped; base is always 0
-  const [equipped, setEquipped] = useState({
-    base:     0,
-    eyes:     0,
-    eyebrows: 0,
-    mouth:    0,
-    nose:     0,
-    buns:     null,
-    hairBack: 0,
-    bangs:    0,
-    earring:  null,
-    ring:     null,
-    sock:     null,
-    shoe:     null,
-    pant:     null,
-    belt:     null,
-    shirt:    null,
-    necklace: null,
-    bracelet: null,
-    hat:      null,
-    hairclip: null,
-  });
-
-  const [layerOrder, setLayerOrder] = useState(DEFAULT_LAYER_ORDER);
+  // Single source of truth: ordered array of equipped items (index 0 = behind)
+  // Each entry: { key: string (stable), type: string, id: number }
+  const [layers, setLayers] = useState([
+    { key: 'base', type: 'base', id: 0 },
+  ]);
+  const nextKey = useRef(1);
 
   const handleEquip = useCallback((type, id) => {
-    if (type === 'base') return;
-    setEquipped(prev => ({ ...prev, [type]: id }));
+    if (id === null) {
+      // ✕ button: remove all of this type
+      setLayers(prev => prev.filter(l => l.type !== type));
+      return;
+    }
+    if (SINGLETON_TYPES.has(type)) {
+      setLayers(prev => {
+        const without = prev.filter(l => l.type !== type);
+        const existing = prev.find(l => l.type === type);
+        if (existing?.id === id) return without; // toggle off
+        return [...without, { key: `k${nextKey.current++}`, type, id }];
+      });
+    } else {
+      setLayers(prev => {
+        const existingIdx = prev.findLastIndex(l => l.type === type && l.id === id);
+        if (existingIdx !== -1) return prev.filter((_, i) => i !== existingIdx);
+        return [...prev, { key: `k${nextKey.current++}`, type, id }];
+      });
+    }
+  }, []);
+
+  const handleRemove = useCallback((key) => {
+    setLayers(prev => prev.filter(l => l.key !== key));
   }, []);
 
   // Drawing
@@ -112,30 +95,34 @@ export default function App() {
 
   const maskSrcs = useMemo(() => {
     if (drawLayer === 'hair') {
-      return [
-        equipped.buns     != null ? BUNS_ASSETS[equipped.buns]?.src         : null,
-        equipped.hairBack != null ? HAIR_BACK_ASSETS[equipped.hairBack]?.src : null,
-        equipped.bangs    != null ? BANGS_ASSETS[equipped.bangs]?.src        : null,
-        equipped.eyebrows != null ? EYEBROWS_ASSETS[equipped.eyebrows]?.src  : null,
-      ].filter(Boolean);
+      return layers
+        .filter(l => ['buns', 'hairBack', 'bangs', 'eyebrows'].includes(l.type))
+        .map(l => ({ buns: BUNS_ASSETS, hairBack: HAIR_BACK_ASSETS,
+                     bangs: BANGS_ASSETS, eyebrows: EYEBROWS_ASSETS }[l.type]?.[l.id]?.src)
+        )
+        .filter(Boolean);
     }
     if (drawLayer === 'skin') {
       return [
-        '/assets/base.png',
-        equipped.mouth != null ? MOUTH_ASSETS[equipped.mouth]?.src : null,
-        equipped.nose  != null ? NOSE_ASSETS[equipped.nose]?.src   : null,
+        layers.some(l => l.type === 'base') ? '/assets/base.png' : null,
+        ...layers.filter(l => l.type === 'mouth').map(l => MOUTH_ASSETS[l.id]?.src),
+        ...layers.filter(l => l.type === 'nose').map(l => NOSE_ASSETS[l.id]?.src),
       ].filter(Boolean);
     }
     if (drawLayer === 'eyes') {
-      const eyeSet = equipped.eyes != null ? EYES_ASSETS[equipped.eyes] : null;
+      const eyeLayer = layers.find(l => l.type === 'eyes');
+      if (!eyeLayer) return [];
+      const eyeSet = EYES_ASSETS[eyeLayer.id];
       return eyeSet ? [eyeSet.sclera, eyeSet.iris] : [];
     }
     return [];
-  }, [drawLayer, equipped]);
+  }, [drawLayer, layers]);
 
   return (
     <div className="app">
       <main className="main-content">
+
+        {/* Outer left: Colors + Draw */}
         <div className="color-panel">
           <div className="panel-card">
             <h2 className="panel-title">Colors</h2>
@@ -183,6 +170,12 @@ export default function App() {
           </div>
         </div>
 
+        {/* Inner left: Layers */}
+        <div className="layer-column">
+          <LayerPanel layers={layers} onReorder={setLayers} onRemove={handleRemove} />
+        </div>
+
+        {/* Center: Character */}
         <div className="character-stage">
           <div className="stage-sparkles" aria-hidden="true">
             {['✦','✧','✦','✧','✦','✧'].map((s, i) => (
@@ -191,17 +184,15 @@ export default function App() {
           </div>
           <CharacterPNG
             skinColor={skinColor} hairColor={hairColor} eyeColor={eyeColor}
-            equipped={equipped} layerOrder={layerOrder}
+            layers={layers}
             drawRef={drawRef} drawTool={drawTool}
             drawColor={drawColor} brushSize={brushSize}
             maskSrcs={maskSrcs}
           />
         </div>
 
-        <Wardrobe
-          equipped={equipped} onEquip={handleEquip}
-          layerOrder={layerOrder} onReorderLayers={setLayerOrder}
-        />
+        {/* Right: Wardrobe */}
+        <Wardrobe layers={layers} onEquip={handleEquip} />
       </main>
     </div>
   );
