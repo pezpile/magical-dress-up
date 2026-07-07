@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import {
   EYES, EYEBROWS, MOUTH, NOSE, BANGS, HAIR_BACK, BUNS,
-  SHIRTS, PANTS, SOCKS, SHOES, NECKLACES, BRACELETS, EARRINGS, HATS,
+  SHIRTS, PANTS, SOCKS, SHOES, NECKLACES, BRACELETS, EARRINGS, BELTS, RINGS,
+  HATS, HAIRCLIPS,
 } from './data.js';
 import {
   EYES_ASSETS, EYEBROWS_ASSETS, MOUTH_ASSETS, NOSE_ASSETS,
   BANGS_ASSETS, HAIR_BACK_ASSETS, BUNS_ASSETS,
   SHIRT_ASSETS, PANT_ASSETS, SOCK_ASSETS, SHOE_ASSETS,
-  NECKLACE_ASSETS, BRACELET_ASSETS, EARRING_ASSETS, HAT_ASSETS,
+  NECKLACE_ASSETS, BRACELET_ASSETS, EARRING_ASSETS, BELT_ASSETS, RING_ASSETS,
+  HAT_ASSETS, HAIRCLIP_ASSETS,
 } from './assets.js';
 
 // ── Thumbnail crop helpers ────────────────────────────────────────────────────
@@ -28,12 +30,15 @@ const THUMB = {
   buns:     thumbCss(49, 15,  5),
   shirt:    thumbCss(47, 49,  5),
   pant:     thumbCss(49, 57,  8),
+  belt:     thumbCss(49, 65, 15),
   sock:     thumbCss(48, 75,  7),
-  shoe:     thumbCss(48, 81,  7),
+  shoe:     thumbCss(48, 84,  7),
   necklace: thumbCss(50, 43, 15),
   bracelet: thumbCss(41, 65, 15),
   earring:  thumbCss(49, 39, 12),
+  ring:     thumbCss(38, 67, 25),
   hat:      thumbCss(48, 16,  6),
+  hairclip: thumbCss(59, 29, 15),
 };
 
 const LAYER_LABELS = {
@@ -46,13 +51,16 @@ const LAYER_LABELS = {
   hairBack: 'Hair Back',
   bangs:    'Bangs',
   earring:  'Earrings',
+  ring:     'Ring',
   sock:     'Socks',
   shoe:     'Shoes',
   pant:     'Bottoms',
+  belt:     'Belt',
   shirt:    'Tops',
   necklace: 'Necklace',
   bracelet: 'Bracelet',
   hat:      'Hat',
+  hairclip: 'Hair Clip',
 };
 
 const WARDROBE_ASSET_MAP = {
@@ -64,13 +72,16 @@ const WARDROBE_ASSET_MAP = {
   hairBack: HAIR_BACK_ASSETS,
   bangs:    BANGS_ASSETS,
   earring:  EARRING_ASSETS,
+  ring:     RING_ASSETS,
   sock:     SOCK_ASSETS,
   shoe:     SHOE_ASSETS,
   pant:     PANT_ASSETS,
+  belt:     BELT_ASSETS,
   shirt:    SHIRT_ASSETS,
   necklace: NECKLACE_ASSETS,
   bracelet: BRACELET_ASSETS,
   hat:      HAT_ASSETS,
+  hairclip: HAIRCLIP_ASSETS,
 };
 
 // Returns the display thumbnail src for a given layer type + equipped id.
@@ -241,6 +252,9 @@ export default function Wardrobe({ equipped, onEquip, layerOrder, onReorderLayer
       <Section label="Earrings"  thumbKey="earring"  items={EARRINGS}
         getThumbSrc={id => thumbSrc('earring',  id)}
         selected={equipped.earring}  onSelect={id => eq('earring',  id)} />
+      <Section label="Ring"      thumbKey="ring"     items={RINGS}
+        getThumbSrc={id => thumbSrc('ring',     id)}
+        selected={equipped.ring}     onSelect={id => eq('ring',     id)} />
       <Section label="Necklace"  thumbKey="necklace" items={NECKLACES}
         getThumbSrc={id => thumbSrc('necklace', id)}
         selected={equipped.necklace} onSelect={id => eq('necklace', id)} />
@@ -253,12 +267,18 @@ export default function Wardrobe({ equipped, onEquip, layerOrder, onReorderLayer
       <Section label="Bottoms"   thumbKey="pant"     items={PANTS}
         getThumbSrc={id => thumbSrc('pant',     id)}
         selected={equipped.pant}     onSelect={id => eq('pant',     id)} />
+      <Section label="Belt"      thumbKey="belt"     items={BELTS}
+        getThumbSrc={id => thumbSrc('belt',     id)}
+        selected={equipped.belt}     onSelect={id => eq('belt',     id)} />
       <Section label="Socks"     thumbKey="sock"     items={SOCKS}
         getThumbSrc={id => thumbSrc('sock',     id)}
         selected={equipped.sock}     onSelect={id => eq('sock',     id)} />
       <Section label="Shoes"     thumbKey="shoe"     items={SHOES}
         getThumbSrc={id => thumbSrc('shoe',     id)}
         selected={equipped.shoe}     onSelect={id => eq('shoe',     id)} />
+      <Section label="Hair Clip" thumbKey="hairclip" items={HAIRCLIPS}
+        getThumbSrc={id => thumbSrc('hairclip', id)}
+        selected={equipped.hairclip} onSelect={id => eq('hairclip', id)} />
     </div>
   );
 }

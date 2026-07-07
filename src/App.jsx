@@ -55,13 +55,16 @@ const DEFAULT_LAYER_ORDER = [
   'mouth',
   'nose',
   'earring',
+  'ring',
   'sock',
   'shoe',
   'pant',
+  'belt',
   'shirt',
   'necklace',
   'bracelet',
   'bangs',
+  'hairclip',
   'hat',
 ];
 
@@ -81,13 +84,16 @@ export default function App() {
     hairBack: 0,
     bangs:    0,
     earring:  null,
+    ring:     null,
     sock:     null,
     shoe:     null,
     pant:     null,
+    belt:     null,
     shirt:    null,
     necklace: null,
     bracelet: null,
     hat:      null,
+    hairclip: null,
   });
 
   const [layerOrder, setLayerOrder] = useState(DEFAULT_LAYER_ORDER);
