@@ -16,6 +16,29 @@ import './App.css';
 // Types where only one instance is ever shown (replacing, not stacking)
 const SINGLETON_TYPES = new Set(['base', 'eyes', 'eyebrows', 'mouth', 'nose']);
 
+// Back-to-front render priority (lower = further behind)
+const LAYER_ORDER = {
+  buns:      0,
+  hairBack:  1,
+  base:      2,
+  eyes:      3,  nose: 3, mouth: 3, eyebrows: 3,
+  bangs:     4,
+  sock:      5,
+  shoe:      6,
+  earring:   7,  necklace: 7, bracelet: 7, ring: 7, armwarmer: 7, belt: 7,
+  pant:      8,
+  shirt:     9,  hat: 9, hairclip: 9, dress: 9,
+};
+
+function insertOrdered(arr, newItem) {
+  const order = LAYER_ORDER[newItem.type] ?? 99;
+  const idx = arr.findIndex(l => (LAYER_ORDER[l.type] ?? 99) > order);
+  if (idx === -1) return [...arr, newItem];
+  const next = [...arr];
+  next.splice(idx, 0, newItem);
+  return next;
+}
+
 function hslToHex(h, s, l) {
   s /= 100; l /= 100;
   const a = s * Math.min(l, 1 - l);
@@ -100,7 +123,6 @@ export default function App() {
 
   const handleEquip = useCallback((type, id) => {
     if (id === null) {
-      // ✕ button: remove all of this type
       setLayers(prev => prev.filter(l => l.type !== type));
       return;
     }
@@ -109,33 +131,13 @@ export default function App() {
         const without = prev.filter(l => l.type !== type);
         const existing = prev.find(l => l.type === type);
         if (existing?.id === id) return without; // toggle off
-        return [...without, { key: `k${nextKey.current++}`, type, id }];
+        return insertOrdered(without, { key: `k${nextKey.current++}`, type, id });
       });
     } else {
       setLayers(prev => {
         const existingIdx = prev.findLastIndex(l => l.type === type && l.id === id);
         if (existingIdx !== -1) return prev.filter((_, i) => i !== existingIdx);
-        const newItem = { key: `k${nextKey.current++}`, type, id };
-        // hairBack inserts before base so it renders behind the body
-        if (type === 'hairBack') {
-          const baseIdx = prev.findIndex(l => l.type === 'base');
-          const at = baseIdx !== -1 ? baseIdx : 0;
-          const next = [...prev];
-          next.splice(at, 0, newItem);
-          return next;
-        }
-        // buns insert before hairBack so they render behind it
-        if (type === 'buns') {
-          const hairBackIdx = prev.findIndex(l => l.type === 'hairBack');
-          const baseIdx     = prev.findIndex(l => l.type === 'base');
-          const at = hairBackIdx !== -1 ? hairBackIdx
-                   : baseIdx     !== -1 ? baseIdx
-                   : 0;
-          const next = [...prev];
-          next.splice(at, 0, newItem);
-          return next;
-        }
-        return [...prev, newItem];
+        return insertOrdered(prev, { key: `k${nextKey.current++}`, type, id });
       });
     }
   }, []);
@@ -150,19 +152,14 @@ export default function App() {
     setEyeColor(randomEyeColor());
 
     let k = nextKey.current;
-    const newLayers = [];
+    const newLayers = [{ key: 'base', type: 'base', id: 0 }];
     const pick = arr => arr[Math.floor(Math.random() * arr.length)];
     const maybe = (prob, type, arr) => {
       if (Math.random() < prob)
         newLayers.push({ key: `k${k++}`, type, id: pick(arr).id });
     };
 
-    // hairBack inserts before base so it renders behind the body
-    if (Math.random() < 0.8)
-      newLayers.push({ key: `k${k++}`, type: 'hairBack', id: pick(HAIR_BACK).id });
-
-    newLayers.push({ key: 'base', type: 'base', id: 0 });
-
+    maybe(0.8,  'hairBack',  HAIR_BACK);
     maybe(1.0,  'eyes',      EYES);
     maybe(0.9,  'eyebrows',  EYEBROWS);
     maybe(0.8,  'nose',      NOSE);
@@ -187,6 +184,7 @@ export default function App() {
     maybe(0.25, 'hat',       HATS);
     maybe(0.4,  'hairclip',  HAIRCLIPS);
 
+    newLayers.sort((a, b) => (LAYER_ORDER[a.type] ?? 99) - (LAYER_ORDER[b.type] ?? 99));
     nextKey.current = k;
     setLayers(newLayers);
   }, []);
