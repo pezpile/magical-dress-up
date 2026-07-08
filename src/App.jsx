@@ -159,12 +159,12 @@ export default function App() {
         newLayers.push({ key: `k${k++}`, type, id: pick(arr).id });
     };
 
-    maybe(0.8,  'hairBack',  HAIR_BACK);
+    maybe(1.0,  'hairBack',  HAIR_BACK);
     maybe(1.0,  'eyes',      EYES);
-    maybe(0.9,  'eyebrows',  EYEBROWS);
-    maybe(0.8,  'nose',      NOSE);
-    maybe(0.9,  'mouth',     MOUTH);
-    maybe(0.7,  'bangs',     BANGS);
+    maybe(1.0,  'eyebrows',  EYEBROWS);
+    maybe(1.0,  'nose',      NOSE);
+    maybe(1.0,  'mouth',     MOUTH);
+    maybe(1.0,  'bangs',     BANGS);
     maybe(0.4,  'buns',      BUNS);
 
     if (Math.random() < 0.3) {
