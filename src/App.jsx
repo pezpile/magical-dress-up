@@ -124,6 +124,17 @@ export default function App() {
           next.splice(at, 0, newItem);
           return next;
         }
+        // buns insert before hairBack so they render behind it
+        if (type === 'buns') {
+          const hairBackIdx = prev.findIndex(l => l.type === 'hairBack');
+          const baseIdx     = prev.findIndex(l => l.type === 'base');
+          const at = hairBackIdx !== -1 ? hairBackIdx
+                   : baseIdx     !== -1 ? baseIdx
+                   : 0;
+          const next = [...prev];
+          next.splice(at, 0, newItem);
+          return next;
+        }
         return [...prev, newItem];
       });
     }
