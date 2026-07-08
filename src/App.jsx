@@ -78,10 +78,10 @@ export default function App() {
         const existingIdx = prev.findLastIndex(l => l.type === type && l.id === id);
         if (existingIdx !== -1) return prev.filter((_, i) => i !== existingIdx);
         const newItem = { key: `k${nextKey.current++}`, type, id };
-        // hairBack inserts right after base so it sits behind everything else
+        // hairBack inserts before base so it renders behind the body
         if (type === 'hairBack') {
           const baseIdx = prev.findIndex(l => l.type === 'base');
-          const at = baseIdx !== -1 ? baseIdx + 1 : 0;
+          const at = baseIdx !== -1 ? baseIdx : 0;
           const next = [...prev];
           next.splice(at, 0, newItem);
           return next;
