@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import {
   EYES, EYEBROWS, MOUTH, NOSE, BANGS, HAIR_BACK, BUNS,
-  SHIRTS, PANTS, SOCKS, SHOES, NECKLACES, BRACELETS, EARRINGS, BELTS, RINGS,
-  HATS, HAIRCLIPS,
+  SHIRTS, PANTS, SOCKS, SHOES, NECKLACES, BRACELETS, EARRINGS, BELTS, RINGS, ARMWARMERS,
+  HATS, HAIRCLIPS, DRESSES,
 } from './data.js';
 import {
   EYES_ASSETS, EYEBROWS_ASSETS, MOUTH_ASSETS, NOSE_ASSETS,
   BANGS_ASSETS, HAIR_BACK_ASSETS, BUNS_ASSETS,
   SHIRT_ASSETS, PANT_ASSETS, SOCK_ASSETS, SHOE_ASSETS,
-  NECKLACE_ASSETS, BRACELET_ASSETS, EARRING_ASSETS, BELT_ASSETS, RING_ASSETS,
-  HAT_ASSETS, HAIRCLIP_ASSETS,
+  NECKLACE_ASSETS, BRACELET_ASSETS, EARRING_ASSETS, BELT_ASSETS, RING_ASSETS, ARMWARMER_ASSETS,
+  HAT_ASSETS, HAIRCLIP_ASSETS, DRESS_ASSETS,
 } from './assets.js';
 
 // ── Thumbnail crop helpers ────────────────────────────────────────────────────
@@ -20,68 +20,74 @@ function thumbCss(cx, cy, zoom) {
 }
 
 const THUMB = {
-  base:     thumbCss(50, 50,  2),
-  eyes:     thumbCss(49, 33,  7),
-  eyebrows: thumbCss(49, 29,  8),
-  nose:     thumbCss(50, 41, 12),
-  mouth:    thumbCss(50, 47, 10),
-  bangs:    thumbCss(50, 18,  5),
-  hairBack: thumbCss(50, 15,  4),
-  buns:     thumbCss(49, 15,  5),
-  shirt:    thumbCss(47, 49,  5),
-  pant:     thumbCss(49, 57,  8),
-  belt:     thumbCss(49, 65, 15),
-  sock:     thumbCss(48, 75,  7),
-  shoe:     thumbCss(48, 84,  7),
-  necklace: thumbCss(50, 43, 15),
-  bracelet: thumbCss(41, 65, 15),
-  earring:  thumbCss(49, 39, 12),
-  ring:     thumbCss(38, 67, 25),
-  hat:      thumbCss(48, 16,  6),
-  hairclip: thumbCss(59, 29, 15),
+  base:      thumbCss(50, 50,  2),
+  eyes:      thumbCss(49, 33,  7),
+  eyebrows:  thumbCss(49, 29,  8),
+  nose:      thumbCss(50, 41, 12),
+  mouth:     thumbCss(50, 47, 10),
+  bangs:     thumbCss(50, 18,  5),
+  hairBack:  thumbCss(50, 15,  4),
+  buns:      thumbCss(49, 15,  5),
+  shirt:     thumbCss(47, 49,  5),
+  pant:      thumbCss(49, 57,  8),
+  belt:      thumbCss(49, 65, 15),
+  sock:      thumbCss(48, 75,  7),
+  shoe:      thumbCss(48, 84,  7),
+  necklace:  thumbCss(50, 43, 15),
+  bracelet:  thumbCss(41, 65, 15),
+  earring:   thumbCss(49, 39, 12),
+  ring:      thumbCss(38, 67, 25),
+  armwarmer: thumbCss(50, 59,  7),
+  hat:       thumbCss(48, 16,  6),
+  hairclip:  thumbCss(59, 29, 15),
+  dress:     thumbCss(50, 58,  4),
 };
 
 const LAYER_LABELS = {
-  base:     'Base',
-  eyes:     'Eyes',
-  eyebrows: 'Eyebrows',
-  mouth:    'Mouth',
-  nose:     'Nose',
-  buns:     'Buns',
-  hairBack: 'Hair Back',
-  bangs:    'Bangs',
-  earring:  'Earrings',
-  ring:     'Ring',
-  sock:     'Socks',
-  shoe:     'Shoes',
-  pant:     'Bottoms',
-  belt:     'Belt',
-  shirt:    'Tops',
-  necklace: 'Necklace',
-  bracelet: 'Bracelet',
-  hat:      'Hat',
-  hairclip: 'Hair Clip',
+  base:      'Base',
+  eyes:      'Eyes',
+  eyebrows:  'Eyebrows',
+  mouth:     'Mouth',
+  nose:      'Nose',
+  buns:      'Buns',
+  hairBack:  'Hair Back',
+  bangs:     'Bangs',
+  earring:   'Earrings',
+  ring:      'Ring',
+  sock:      'Socks',
+  shoe:      'Shoes',
+  pant:      'Bottoms',
+  belt:      'Belt',
+  shirt:     'Tops',
+  necklace:  'Necklace',
+  bracelet:  'Bracelet',
+  armwarmer: 'Arm Warmers',
+  hat:       'Hat',
+  hairclip:  'Hair Clip',
+  dress:     'Dress',
 };
 
 const WARDROBE_ASSET_MAP = {
-  eyes:     EYES_ASSETS,
-  eyebrows: EYEBROWS_ASSETS,
-  mouth:    MOUTH_ASSETS,
-  nose:     NOSE_ASSETS,
-  buns:     BUNS_ASSETS,
-  hairBack: HAIR_BACK_ASSETS,
-  bangs:    BANGS_ASSETS,
-  earring:  EARRING_ASSETS,
-  ring:     RING_ASSETS,
-  sock:     SOCK_ASSETS,
-  shoe:     SHOE_ASSETS,
-  pant:     PANT_ASSETS,
-  belt:     BELT_ASSETS,
-  shirt:    SHIRT_ASSETS,
-  necklace: NECKLACE_ASSETS,
-  bracelet: BRACELET_ASSETS,
-  hat:      HAT_ASSETS,
-  hairclip: HAIRCLIP_ASSETS,
+  eyes:      EYES_ASSETS,
+  eyebrows:  EYEBROWS_ASSETS,
+  mouth:     MOUTH_ASSETS,
+  nose:      NOSE_ASSETS,
+  buns:      BUNS_ASSETS,
+  hairBack:  HAIR_BACK_ASSETS,
+  bangs:     BANGS_ASSETS,
+  earring:   EARRING_ASSETS,
+  ring:      RING_ASSETS,
+  sock:      SOCK_ASSETS,
+  shoe:      SHOE_ASSETS,
+  pant:      PANT_ASSETS,
+  belt:      BELT_ASSETS,
+  shirt:     SHIRT_ASSETS,
+  necklace:  NECKLACE_ASSETS,
+  bracelet:  BRACELET_ASSETS,
+  armwarmer: ARMWARMER_ASSETS,
+  hat:       HAT_ASSETS,
+  hairclip:  HAIRCLIP_ASSETS,
+  dress:     DRESS_ASSETS,
 };
 
 // Lookup item name from data arrays for layer panel labels
@@ -89,8 +95,8 @@ const ITEMS_BY_TYPE = {
   eyes: EYES, eyebrows: EYEBROWS, mouth: MOUTH, nose: NOSE,
   bangs: BANGS, hairBack: HAIR_BACK, buns: BUNS,
   shirt: SHIRTS, pant: PANTS, belt: BELTS, sock: SOCKS, shoe: SHOES,
-  necklace: NECKLACES, bracelet: BRACELETS, earring: EARRINGS, ring: RINGS,
-  hat: HATS, hairclip: HAIRCLIPS,
+  necklace: NECKLACES, bracelet: BRACELETS, earring: EARRINGS, ring: RINGS, armwarmer: ARMWARMERS,
+  hat: HATS, hairclip: HAIRCLIPS, dress: DRESSES,
 };
 
 function getItemName(type, id) {
@@ -280,21 +286,27 @@ export default function Wardrobe({ layers, onEquip }) {
       <Section label="Bracelet"  thumbKey="bracelet" items={BRACELETS}
         equippedIds={eqIds('bracelet')} onSelect={id => onEquip('bracelet', id)}
         getThumbSrc={id => ts('bracelet', id)} />
-      <Section label="Tops"      thumbKey="shirt"    items={SHIRTS}
-        equippedIds={eqIds('shirt')}    onSelect={id => onEquip('shirt',    id)}
-        getThumbSrc={id => ts('shirt',    id)} />
-      <Section label="Belt"      thumbKey="belt"     items={BELTS}
-        equippedIds={eqIds('belt')}     onSelect={id => onEquip('belt',     id)}
-        getThumbSrc={id => ts('belt',     id)} />
-      <Section label="Bottoms"   thumbKey="pant"     items={PANTS}
-        equippedIds={eqIds('pant')}     onSelect={id => onEquip('pant',     id)}
-        getThumbSrc={id => ts('pant',     id)} />
-      <Section label="Socks"     thumbKey="sock"     items={SOCKS}
-        equippedIds={eqIds('sock')}     onSelect={id => onEquip('sock',     id)}
-        getThumbSrc={id => ts('sock',     id)} />
-      <Section label="Shoes"     thumbKey="shoe"     items={SHOES}
-        equippedIds={eqIds('shoe')}     onSelect={id => onEquip('shoe',     id)}
-        getThumbSrc={id => ts('shoe',     id)} />
+      <Section label="Dress"      thumbKey="dress"      items={DRESSES}
+        equippedIds={eqIds('dress')}      onSelect={id => onEquip('dress',      id)}
+        getThumbSrc={id => ts('dress',      id)} />
+      <Section label="Tops"       thumbKey="shirt"      items={SHIRTS}
+        equippedIds={eqIds('shirt')}      onSelect={id => onEquip('shirt',      id)}
+        getThumbSrc={id => ts('shirt',      id)} />
+      <Section label="Belt"       thumbKey="belt"       items={BELTS}
+        equippedIds={eqIds('belt')}       onSelect={id => onEquip('belt',       id)}
+        getThumbSrc={id => ts('belt',       id)} />
+      <Section label="Bottoms"    thumbKey="pant"       items={PANTS}
+        equippedIds={eqIds('pant')}       onSelect={id => onEquip('pant',       id)}
+        getThumbSrc={id => ts('pant',       id)} />
+      <Section label="Arm Warmers" thumbKey="armwarmer" items={ARMWARMERS}
+        equippedIds={eqIds('armwarmer')}  onSelect={id => onEquip('armwarmer',  id)}
+        getThumbSrc={id => ts('armwarmer',  id)} />
+      <Section label="Socks"      thumbKey="sock"       items={SOCKS}
+        equippedIds={eqIds('sock')}       onSelect={id => onEquip('sock',       id)}
+        getThumbSrc={id => ts('sock',       id)} />
+      <Section label="Shoes"      thumbKey="shoe"       items={SHOES}
+        equippedIds={eqIds('shoe')}       onSelect={id => onEquip('shoe',       id)}
+        getThumbSrc={id => ts('shoe',       id)} />
     </div>
   );
 }

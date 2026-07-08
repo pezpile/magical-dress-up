@@ -4,28 +4,31 @@ import {
   EYES_ASSETS, EYEBROWS_ASSETS, MOUTH_ASSETS, NOSE_ASSETS,
   BANGS_ASSETS, HAIR_BACK_ASSETS, BUNS_ASSETS,
   SHIRT_ASSETS, PANT_ASSETS, SOCK_ASSETS, SHOE_ASSETS,
-  NECKLACE_ASSETS, BRACELET_ASSETS, EARRING_ASSETS, BELT_ASSETS, RING_ASSETS,
+  NECKLACE_ASSETS, BRACELET_ASSETS, EARRING_ASSETS, BELT_ASSETS, RING_ASSETS, ARMWARMER_ASSETS,
   HAT_ASSETS, HAIRCLIP_ASSETS,
+  DRESS_ASSETS,
 } from './assets.js';
 
 const ASSET_MAP = {
-  eyebrows: EYEBROWS_ASSETS,
-  mouth:    MOUTH_ASSETS,
-  nose:     NOSE_ASSETS,
-  buns:     BUNS_ASSETS,
-  hairBack: HAIR_BACK_ASSETS,
-  bangs:    BANGS_ASSETS,
-  earring:  EARRING_ASSETS,
-  ring:     RING_ASSETS,
-  sock:     SOCK_ASSETS,
-  shoe:     SHOE_ASSETS,
-  pant:     PANT_ASSETS,
-  belt:     BELT_ASSETS,
-  shirt:    SHIRT_ASSETS,
-  necklace: NECKLACE_ASSETS,
-  bracelet: BRACELET_ASSETS,
-  hat:      HAT_ASSETS,
-  hairclip: HAIRCLIP_ASSETS,
+  eyebrows:  EYEBROWS_ASSETS,
+  mouth:     MOUTH_ASSETS,
+  nose:      NOSE_ASSETS,
+  buns:      BUNS_ASSETS,
+  hairBack:  HAIR_BACK_ASSETS,
+  bangs:     BANGS_ASSETS,
+  earring:   EARRING_ASSETS,
+  ring:      RING_ASSETS,
+  sock:      SOCK_ASSETS,
+  shoe:      SHOE_ASSETS,
+  pant:      PANT_ASSETS,
+  belt:      BELT_ASSETS,
+  shirt:     SHIRT_ASSETS,
+  necklace:  NECKLACE_ASSETS,
+  bracelet:  BRACELET_ASSETS,
+  armwarmer: ARMWARMER_ASSETS,
+  hat:       HAT_ASSETS,
+  hairclip:  HAIRCLIP_ASSETS,
+  dress:     DRESS_ASSETS,
 };
 
 const HAIR_TYPES = new Set(['buns', 'hairBack', 'bangs', 'eyebrows']);
@@ -116,8 +119,8 @@ export default function CharacterPNG({
           if (!eyeSet) return null;
           return (
             <Fragment key={key}>
-              <Layer src={eyeSet.sclera} filterId={WHITEN_ID} />
-              <Layer src={eyeSet.iris}   filterId={ids.eye}   />
+              {eyeSet.sclera && <Layer src={eyeSet.sclera} filterId={WHITEN_ID} />}
+              <Layer src={eyeSet.iris} filterId={ids.eye} />
             </Fragment>
           );
         }
