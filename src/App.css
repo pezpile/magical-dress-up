@@ -19,6 +19,35 @@
   overflow: hidden;
 }
 
+/* ── Randomize button ───────────────────────────────────────── */
+
+.randomize-btn {
+  width: 100%;
+  padding: 10px 8px;
+  border-radius: 14px;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  background: linear-gradient(135deg, rgba(255, 200, 230, 0.75), rgba(200, 215, 255, 0.75));
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #7040a0;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 3px 14px rgba(200, 160, 220, 0.22);
+  backdrop-filter: blur(8px);
+  transition: all 0.18s ease;
+}
+
+.randomize-btn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 5px 20px rgba(200, 150, 230, 0.45);
+  background: linear-gradient(135deg, rgba(255, 175, 215, 0.88), rgba(180, 200, 255, 0.88));
+}
+
+.randomize-btn:active {
+  transform: scale(0.97);
+}
+
 /* ── Left panel ─────────────────────────────────────────────── */
 
 .color-panel {
