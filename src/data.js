@@ -51,7 +51,6 @@ export const BUNS = [
   { id: 1, name: 'Rose Buns', emoji: '🌀' },
   { id: 2, name: 'Braided',   emoji: '🌀' },
   { id: 3, name: 'Oval',      emoji: '🌀' },
-  { id: 4, name: 'Hair Puffs',emoji: '🌀' },
 ];
 
 export const SHIRTS = [
@@ -122,6 +121,7 @@ export const HAIRCLIPS  = [
   { id: 2, name: 'Hair Bow',    emoji: '📎' },
   { id: 3, name: 'Hair Flower', emoji: '📎' },
   { id: 4, name: 'Scrunchie',   emoji: '📎' },
+  { id: 5, name: 'Hair Puffs',  emoji: '📎' },
 ];
 
 export const DRESSES    = [

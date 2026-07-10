@@ -57,7 +57,6 @@ export const BUNS_ASSETS = {
   1: { src: '/assets/hairextras/buns2.png' },
   2: { src: '/assets/hairextras/buns3.png' },
   3: { src: '/assets/hairextras/buns4.png' },
-  4: { src: '/assets/hairextras/buns5.png' },
 };
 
 export const SHIRT_ASSETS = {
@@ -128,6 +127,7 @@ export const HAIRCLIP_ASSETS = {
   2: { src: '/assets/headwear/bow1.png'        },
   3: { src: '/assets/headwear/hairflower1.png' },
   4: { src: '/assets/headwear/scrunchie1.png'  },
+  5: { src: '/assets/headwear/hairpuffs1.png'  },
 };
 
 export const MARKS_ASSETS = {
