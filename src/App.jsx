@@ -148,6 +148,15 @@ export default function App() {
     setLayers(prev => prev.filter(l => l.key !== key));
   }, []);
 
+  const handleReset = useCallback(() => {
+    setSkinColor('#f5c5a3');
+    setHairColor('#5a2e1a');
+    setEyeColor('#3b82f6');
+    setLayers([{ key: 'base', type: 'base', id: 0 }]);
+    nextKey.current = 1;
+    drawRef.current?.clear();
+  }, []);
+
   const handleRandomize = useCallback(() => {
     setSkinColor(randomSkinColor());
     setHairColor(randomHairColor());
@@ -234,6 +243,9 @@ export default function App() {
         <div className="color-panel">
           <button className="randomize-btn" onClick={handleRandomize}>
             ✦ Randomize
+          </button>
+          <button className="reset-btn" onClick={handleReset}>
+            ✕ Clear
           </button>
           <div className="panel-card colors-card">
             <h2 className="panel-title">Colors</h2>
