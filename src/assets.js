@@ -123,11 +123,13 @@ export const BELLY_ASSETS     = { 0: { src: '/assets/accessories/bellystud1.png'
 export const HAT_ASSETS      = { 0: { src: '/assets/headwear/hat1.png'       } };
 export const HAIRCLIP_ASSETS = {
   0: { src: '/assets/headwear/hairclip1.png'  },
-  1: { src: '/assets/headwear/hairclip2.png'  },
-  2: { src: '/assets/headwear/bow1.png'        },
-  3: { src: '/assets/headwear/hairflower1.png' },
-  4: { src: '/assets/headwear/scrunchie1.png'  },
-  5: { src: '/assets/headwear/hairpuffs1.png'  },
+  1: { src: '/assets/headwear/hairflower1.png' },
+};
+export const HAIRTIE_ASSETS = {
+  0: { src: '/assets/headwear/hairclip2.png'  },
+  1: { src: '/assets/headwear/bow1.png'        },
+  2: { src: '/assets/headwear/scrunchie1.png'  },
+  3: { src: '/assets/headwear/hairpuffs1.png'  },
 };
 
 export const MARKS_ASSETS = {

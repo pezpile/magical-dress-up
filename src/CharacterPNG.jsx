@@ -5,7 +5,7 @@ import {
   BANGS_ASSETS, HAIR_BACK_ASSETS, BUNS_ASSETS,
   SHIRT_ASSETS, PANT_ASSETS, SOCK_ASSETS, SHOE_ASSETS,
   NECKLACE_ASSETS, BRACELET_ASSETS, EARRING_ASSETS, BELT_ASSETS, RING_ASSETS, ARMWARMER_ASSETS,
-  HAT_ASSETS, HAIRCLIP_ASSETS,
+  HAT_ASSETS, HAIRCLIP_ASSETS, HAIRTIE_ASSETS,
   DRESS_ASSETS, MARKS_ASSETS, BELLY_ASSETS,
 } from './assets.js';
 
@@ -28,6 +28,7 @@ const ASSET_MAP = {
   armwarmer: ARMWARMER_ASSETS,
   hat:       HAT_ASSETS,
   hairclip:  HAIRCLIP_ASSETS,
+  hairtie:   HAIRTIE_ASSETS,
   dress:     DRESS_ASSETS,
   marks:     MARKS_ASSETS,
   belly:     BELLY_ASSETS,
@@ -37,7 +38,7 @@ const HAIR_TYPES    = new Set(['buns', 'hairBack', 'bangs', 'eyebrows']);
 const SKIN_TYPES    = new Set(['mouth', 'nose', 'marks']);
 const OUTFIT_TYPES  = new Set([
   'shirt', 'pant', 'sock', 'shoe', 'dress', 'belt', 'belly', 'armwarmer',
-  'earring', 'necklace', 'bracelet', 'ring', 'hat', 'hairclip',
+  'earring', 'necklace', 'bracelet', 'ring', 'hat', 'hairclip', 'hairtie',
 ]);
 
 function hexToRgb(hex) {

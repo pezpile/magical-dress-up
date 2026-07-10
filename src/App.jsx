@@ -9,7 +9,7 @@ import {
 import {
   EYES, EYEBROWS, MOUTH, NOSE, BANGS, HAIR_BACK, BUNS,
   SHIRTS, PANTS, SOCKS, SHOES, NECKLACES, BRACELETS, EARRINGS, BELTS, RINGS, ARMWARMERS,
-  HATS, HAIRCLIPS, DRESSES, MARKS, BELLIES,
+  HATS, HAIRCLIPS, HAIRTIES, DRESSES, MARKS, BELLIES,
 } from './data.js';
 import './App.css';
 
@@ -22,6 +22,8 @@ const LAYER_ORDER = {
   hairBack:  1,
   base:      2,
   eyes:      3,  nose: 3, mouth: 3, eyebrows: 3,
+  marks:     3.5,
+  hairtie:   3.8,
   bangs:     4,
   sock:      5,
   shoe:      6,
@@ -30,7 +32,6 @@ const LAYER_ORDER = {
   pant:      8,
   shirt:     9,  hat: 9, hairclip: 9, dress: 9,
   belt:      9.5,
-  marks:     3.5,
 };
 
 function insertOrdered(arr, newItem) {
@@ -214,8 +215,9 @@ export default function App() {
     maybe(0.35, 'necklace',  NECKLACES);
     maybe(0.3,  'bracelet',  BRACELETS);
     maybe(0.3,  'ring',      RINGS);
-    maybe(0.25, 'hat',       HATS);
-    maybe(0.4,  'hairclip',  HAIRCLIPS);
+    maybe(0.25, 'hat',      HATS);
+    maybe(0.4,  'hairclip', HAIRCLIPS);
+    maybe(0.4,  'hairtie',  HAIRTIES);
     maybe(0.2,  'marks',     MARKS);
     maybe(0.15, 'belly',     BELLIES);
 

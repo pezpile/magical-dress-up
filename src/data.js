@@ -117,11 +117,13 @@ export const BELLIES    = [{ id: 0, name: 'Belly Stud',   emoji: '✦' }];
 export const HATS       = [{ id: 0, name: 'Bow Hat',      emoji: '🎀' }];
 export const HAIRCLIPS  = [
   { id: 0, name: 'Arrow Clip',  emoji: '📎' },
-  { id: 1, name: 'Bow Clips',   emoji: '📎' },
-  { id: 2, name: 'Hair Bow',    emoji: '📎' },
-  { id: 3, name: 'Hair Flower', emoji: '📎' },
-  { id: 4, name: 'Scrunchie',   emoji: '📎' },
-  { id: 5, name: 'Hair Puffs',  emoji: '📎' },
+  { id: 1, name: 'Hair Flower', emoji: '📎' },
+];
+export const HAIRTIES = [
+  { id: 0, name: 'Bow Clips',  emoji: '📎' },
+  { id: 1, name: 'Hair Bow',   emoji: '📎' },
+  { id: 2, name: 'Scrunchie',  emoji: '📎' },
+  { id: 3, name: 'Hair Puffs', emoji: '📎' },
 ];
 
 export const DRESSES    = [

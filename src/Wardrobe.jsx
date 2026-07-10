@@ -2,14 +2,14 @@ import { useState } from 'react';
 import {
   EYES, EYEBROWS, MOUTH, NOSE, BANGS, HAIR_BACK, BUNS,
   SHIRTS, PANTS, SOCKS, SHOES, NECKLACES, BRACELETS, EARRINGS, BELTS, RINGS, ARMWARMERS,
-  HATS, HAIRCLIPS, DRESSES, MARKS, BELLIES,
+  HATS, HAIRCLIPS, HAIRTIES, DRESSES, MARKS, BELLIES,
 } from './data.js';
 import {
   EYES_ASSETS, EYEBROWS_ASSETS, MOUTH_ASSETS, NOSE_ASSETS,
   BANGS_ASSETS, HAIR_BACK_ASSETS, BUNS_ASSETS,
   SHIRT_ASSETS, PANT_ASSETS, SOCK_ASSETS, SHOE_ASSETS,
   NECKLACE_ASSETS, BRACELET_ASSETS, EARRING_ASSETS, BELT_ASSETS, RING_ASSETS, ARMWARMER_ASSETS,
-  HAT_ASSETS, HAIRCLIP_ASSETS, DRESS_ASSETS, MARKS_ASSETS, BELLY_ASSETS,
+  HAT_ASSETS, HAIRCLIP_ASSETS, HAIRTIE_ASSETS, DRESS_ASSETS, MARKS_ASSETS, BELLY_ASSETS,
 } from './assets.js';
 
 // ── Thumbnail crop helpers ────────────────────────────────────────────────────
@@ -40,6 +40,7 @@ const THUMB = {
   armwarmer: thumbCss(50, 59,  7),
   hat:       thumbCss(48, 16,  6),
   hairclip:  thumbCss(59, 29, 15),
+  hairtie:   thumbCss(49, 15,  5),
   dress:     thumbCss(50, 58,  4),
   marks:     thumbCss(50, 40, 10),
   belly:     thumbCss(50, 58, 15),
@@ -65,6 +66,7 @@ const WARDROBE_ASSET_MAP = {
   armwarmer: ARMWARMER_ASSETS,
   hat:       HAT_ASSETS,
   hairclip:  HAIRCLIP_ASSETS,
+  hairtie:   HAIRTIE_ASSETS,
   dress:     DRESS_ASSETS,
   marks:     MARKS_ASSETS,
   belly:     BELLY_ASSETS,
@@ -75,7 +77,7 @@ const ITEMS_BY_TYPE = {
   bangs: BANGS, hairBack: HAIR_BACK, buns: BUNS,
   shirt: SHIRTS, pant: PANTS, belt: BELTS, sock: SOCKS, shoe: SHOES,
   necklace: NECKLACES, bracelet: BRACELETS, earring: EARRINGS, ring: RINGS, armwarmer: ARMWARMERS,
-  hat: HATS, hairclip: HAIRCLIPS, dress: DRESSES,
+  hat: HATS, hairclip: HAIRCLIPS, hairtie: HAIRTIES, dress: DRESSES,
   marks: MARKS, belly: BELLIES,
 };
 
@@ -260,6 +262,7 @@ export default function Wardrobe({ layers, onEquip }) {
           <Section label="Hair Back" thumbKey="hairBack" items={HAIR_BACK} equippedIds={eqIds('hairBack')} onSelect={id => onEquip('hairBack', id)} getThumbSrc={id => ts('hairBack', id)} />
           <Section label="Hat"       thumbKey="hat"      items={HATS}      equippedIds={eqIds('hat')}      onSelect={id => onEquip('hat',      id)} getThumbSrc={id => ts('hat',      id)} />
           <Section label="Hair Clip" thumbKey="hairclip" items={HAIRCLIPS} equippedIds={eqIds('hairclip')} onSelect={id => onEquip('hairclip', id)} getThumbSrc={id => ts('hairclip', id)} />
+          <Section label="Hair Tie"  thumbKey="hairtie"  items={HAIRTIES}  equippedIds={eqIds('hairtie')}  onSelect={id => onEquip('hairtie',  id)} getThumbSrc={id => ts('hairtie',  id)} />
         </>}
 
         {activeTab === 'outfit' && <>
