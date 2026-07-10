@@ -176,23 +176,37 @@ export default function App() {
         newLayers.push({ key: `k${k++}`, type, id: pick(arr).id });
     };
 
-    maybe(1.0,  'hairBack',  HAIR_BACK);
-    maybe(1.0,  'eyes',      EYES);
-    maybe(1.0,  'eyebrows',  EYEBROWS);
-    maybe(1.0,  'nose',      NOSE);
-    maybe(1.0,  'mouth',     MOUTH);
-    maybe(1.0,  'bangs',     BANGS);
-    maybe(0.4,  'buns',      BUNS);
+    // Face — always
+    maybe(1.0, 'eyes',     EYES);
+    maybe(1.0, 'eyebrows', EYEBROWS);
+    maybe(1.0, 'nose',     NOSE);
+    maybe(1.0, 'mouth',    MOUTH);
 
-    if (Math.random() < 0.3) {
+    // Hair — always bangs; back/buns: ~55% just back, ~15% just buns, ~30% both
+    maybe(1.0, 'bangs', BANGS);
+    const hairRoll = Math.random();
+    if (hairRoll < 0.55) {
+      maybe(1.0, 'hairBack', HAIR_BACK);
+    } else if (hairRoll < 0.70) {
+      maybe(1.0, 'buns', BUNS);
+    } else {
+      maybe(1.0, 'hairBack', HAIR_BACK);
+      maybe(1.0, 'buns',     BUNS);
+    }
+
+    // Outfit — always dress OR top+pants
+    if (Math.random() < 0.25) {
       maybe(1.0, 'dress', DRESSES);
     } else {
-      maybe(0.85, 'shirt', SHIRTS);
-      maybe(0.85, 'pant',  PANTS);
+      maybe(1.0, 'shirt', SHIRTS);
+      maybe(1.0, 'pant',  PANTS);
     }
-    maybe(0.4,  'belt',      BELTS);
-    maybe(0.6,  'sock',      SOCKS);
-    maybe(0.7,  'shoe',      SHOES);
+
+    // Shoes — always
+    maybe(1.0, 'shoe', SHOES);
+
+    maybe(0.4,  'belt', BELTS);
+    maybe(0.6,  'sock', SOCKS);
     maybe(0.25, 'armwarmer', ARMWARMERS);
     maybe(0.45, 'earring',   EARRINGS);
     maybe(0.35, 'necklace',  NECKLACES);
