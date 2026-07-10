@@ -114,9 +114,9 @@ const DRAW_LAYERS = [
 ];
 
 export default function App() {
-  const [skinColor, setSkinColor] = useState('#f5c5a3');
+  const [skinColor, setSkinColor] = useState('#c68642');
   const [hairColor, setHairColor] = useState('#5a2e1a');
-  const [eyeColor,  setEyeColor]  = useState('#3b82f6');
+  const [eyeColor,  setEyeColor]  = useState('#6b3a2a');
   const [outfitHue,    setOutfitHue]    = useState(0);
   const [outfitBright, setOutfitBright] = useState(100);
   const [outfitSat,    setOutfitSat]    = useState(100);
@@ -154,9 +154,9 @@ export default function App() {
   }, []);
 
   const handleReset = useCallback(() => {
-    setSkinColor('#f5c5a3');
+    setSkinColor('#c68642');
     setHairColor('#5a2e1a');
-    setEyeColor('#3b82f6');
+    setEyeColor('#6b3a2a');
     setOutfitHue(0);
     setOutfitBright(100);
     setOutfitSat(100);
