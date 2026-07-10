@@ -9,7 +9,7 @@ import {
 import {
   EYES, EYEBROWS, MOUTH, NOSE, BANGS, HAIR_BACK, BUNS,
   SHIRTS, PANTS, SOCKS, SHOES, NECKLACES, BRACELETS, EARRINGS, BELTS, RINGS, ARMWARMERS,
-  HATS, HAIRCLIPS, DRESSES,
+  HATS, HAIRCLIPS, DRESSES, MARKS, BELLIES,
 } from './data.js';
 import './App.css';
 
@@ -26,8 +26,10 @@ const LAYER_ORDER = {
   sock:      5,
   shoe:      6,
   earring:   7,  necklace: 7, bracelet: 7, ring: 7, armwarmer: 7, belt: 7,
+  belly:     7.5,
   pant:      8,
   shirt:     9,  hat: 9, hairclip: 9, dress: 9,
+  marks:     3.5,
 };
 
 function insertOrdered(arr, newItem) {
@@ -183,6 +185,8 @@ export default function App() {
     maybe(0.3,  'ring',      RINGS);
     maybe(0.25, 'hat',       HATS);
     maybe(0.4,  'hairclip',  HAIRCLIPS);
+    maybe(0.2,  'marks',     MARKS);
+    maybe(0.15, 'belly',     BELLIES);
 
     newLayers.sort((a, b) => (LAYER_ORDER[a.type] ?? 99) - (LAYER_ORDER[b.type] ?? 99));
     nextKey.current = k;

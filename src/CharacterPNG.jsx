@@ -6,7 +6,7 @@ import {
   SHIRT_ASSETS, PANT_ASSETS, SOCK_ASSETS, SHOE_ASSETS,
   NECKLACE_ASSETS, BRACELET_ASSETS, EARRING_ASSETS, BELT_ASSETS, RING_ASSETS, ARMWARMER_ASSETS,
   HAT_ASSETS, HAIRCLIP_ASSETS,
-  DRESS_ASSETS,
+  DRESS_ASSETS, MARKS_ASSETS, BELLY_ASSETS,
 } from './assets.js';
 
 const ASSET_MAP = {
@@ -29,6 +29,8 @@ const ASSET_MAP = {
   hat:       HAT_ASSETS,
   hairclip:  HAIRCLIP_ASSETS,
   dress:     DRESS_ASSETS,
+  marks:     MARKS_ASSETS,
+  belly:     BELLY_ASSETS,
 };
 
 const HAIR_TYPES = new Set(['buns', 'hairBack', 'bangs', 'eyebrows']);

@@ -2,14 +2,14 @@ import { useState } from 'react';
 import {
   EYES, EYEBROWS, MOUTH, NOSE, BANGS, HAIR_BACK, BUNS,
   SHIRTS, PANTS, SOCKS, SHOES, NECKLACES, BRACELETS, EARRINGS, BELTS, RINGS, ARMWARMERS,
-  HATS, HAIRCLIPS, DRESSES,
+  HATS, HAIRCLIPS, DRESSES, MARKS, BELLIES,
 } from './data.js';
 import {
   EYES_ASSETS, EYEBROWS_ASSETS, MOUTH_ASSETS, NOSE_ASSETS,
   BANGS_ASSETS, HAIR_BACK_ASSETS, BUNS_ASSETS,
   SHIRT_ASSETS, PANT_ASSETS, SOCK_ASSETS, SHOE_ASSETS,
   NECKLACE_ASSETS, BRACELET_ASSETS, EARRING_ASSETS, BELT_ASSETS, RING_ASSETS, ARMWARMER_ASSETS,
-  HAT_ASSETS, HAIRCLIP_ASSETS, DRESS_ASSETS,
+  HAT_ASSETS, HAIRCLIP_ASSETS, DRESS_ASSETS, MARKS_ASSETS, BELLY_ASSETS,
 } from './assets.js';
 
 // ── Thumbnail crop helpers ────────────────────────────────────────────────────
@@ -41,6 +41,8 @@ const THUMB = {
   hat:       thumbCss(48, 16,  6),
   hairclip:  thumbCss(59, 29, 15),
   dress:     thumbCss(50, 58,  4),
+  marks:     thumbCss(50, 40, 10),
+  belly:     thumbCss(50, 58, 15),
 };
 
 const LAYER_LABELS = {
@@ -65,6 +67,8 @@ const LAYER_LABELS = {
   hat:       'Hat',
   hairclip:  'Hair Clip',
   dress:     'Dress',
+  marks:     'Face Marks',
+  belly:     'Belly',
 };
 
 const WARDROBE_ASSET_MAP = {
@@ -88,6 +92,8 @@ const WARDROBE_ASSET_MAP = {
   hat:       HAT_ASSETS,
   hairclip:  HAIRCLIP_ASSETS,
   dress:     DRESS_ASSETS,
+  marks:     MARKS_ASSETS,
+  belly:     BELLY_ASSETS,
 };
 
 // Lookup item name from data arrays for layer panel labels
@@ -97,6 +103,7 @@ const ITEMS_BY_TYPE = {
   shirt: SHIRTS, pant: PANTS, belt: BELTS, sock: SOCKS, shoe: SHOES,
   necklace: NECKLACES, bracelet: BRACELETS, earring: EARRINGS, ring: RINGS, armwarmer: ARMWARMERS,
   hat: HATS, hairclip: HAIRCLIPS, dress: DRESSES,
+  marks: MARKS, belly: BELLIES,
 };
 
 function getItemName(type, id) {
@@ -250,6 +257,9 @@ export default function Wardrobe({ layers, onEquip }) {
       <Section label="Eyes"      thumbKey="eyes"     items={EYES}
         equippedIds={eqIds('eyes')}     onSelect={id => onEquip('eyes',     id)}
         getThumbSrc={id => ts('eyes',     id)} />
+      <Section label="Face Marks" thumbKey="marks"   items={MARKS}
+        equippedIds={eqIds('marks')}    onSelect={id => onEquip('marks',    id)}
+        getThumbSrc={id => ts('marks',    id)} />
       <Section label="Eyebrows"  thumbKey="eyebrows" items={EYEBROWS}
         equippedIds={eqIds('eyebrows')} onSelect={id => onEquip('eyebrows', id)}
         getThumbSrc={id => ts('eyebrows', id)} />
@@ -295,6 +305,9 @@ export default function Wardrobe({ layers, onEquip }) {
       <Section label="Belt"       thumbKey="belt"       items={BELTS}
         equippedIds={eqIds('belt')}       onSelect={id => onEquip('belt',       id)}
         getThumbSrc={id => ts('belt',       id)} />
+      <Section label="Belly"      thumbKey="belly"      items={BELLIES}
+        equippedIds={eqIds('belly')}      onSelect={id => onEquip('belly',      id)}
+        getThumbSrc={id => ts('belly',      id)} />
       <Section label="Bottoms"    thumbKey="pant"       items={PANTS}
         equippedIds={eqIds('pant')}       onSelect={id => onEquip('pant',       id)}
         getThumbSrc={id => ts('pant',       id)} />
