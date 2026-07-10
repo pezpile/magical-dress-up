@@ -195,6 +195,7 @@ export default function App() {
 
   // Drawing
   const drawRef   = useRef(null);
+  const [drawEnabled, setDrawEnabled] = useState(false);
   const [drawTool,  setDrawTool]  = useState('brush');
   const [drawColor, setDrawColor] = useState('#e87cd4');
   const [brushSize, setBrushSize] = useState(12);
@@ -234,7 +235,7 @@ export default function App() {
           <button className="randomize-btn" onClick={handleRandomize}>
             ✦ Randomize
           </button>
-          <div className="panel-card">
+          <div className="panel-card colors-card">
             <h2 className="panel-title">Colors</h2>
             <ColorSwatch label="Skin" color={skinColor} onChange={setSkinColor} />
             <ColorSwatch label="Hair" color={hairColor} onChange={setHairColor} />
@@ -242,15 +243,21 @@ export default function App() {
           </div>
 
           <div className="panel-card">
-            <h2 className="panel-title">Draw</h2>
+            <div className="draw-panel-header">
+              <h2 className="panel-title">Draw</h2>
+              <button
+                className={`draw-toggle-btn ${drawEnabled ? 'active' : ''}`}
+                onClick={() => setDrawEnabled(e => !e)}
+              >{drawEnabled ? 'ON' : 'OFF'}</button>
+            </div>
             <div className="draw-tools">
               <button
                 className={`tool-btn ${drawTool === 'brush' ? 'active' : ''}`}
-                onClick={() => setDrawTool('brush')}
+                onClick={() => { setDrawTool('brush'); setDrawEnabled(true); }}
               >Brush</button>
               <button
                 className={`tool-btn ${drawTool === 'eraser' ? 'active' : ''}`}
-                onClick={() => setDrawTool('eraser')}
+                onClick={() => { setDrawTool('eraser'); setDrawEnabled(true); }}
               >Erase</button>
             </div>
             <h3 className="draw-subtitle">Clip to layer</h3>
@@ -295,7 +302,7 @@ export default function App() {
           <CharacterPNG
             skinColor={skinColor} hairColor={hairColor} eyeColor={eyeColor}
             layers={layers}
-            drawRef={drawRef} drawTool={drawTool}
+            drawRef={drawRef} drawTool={drawTool} drawEnabled={drawEnabled}
             drawColor={drawColor} brushSize={brushSize}
             maskSrcs={maskSrcs}
           />

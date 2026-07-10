@@ -12,7 +12,7 @@ function loadImage(src) {
   });
 }
 
-const DrawingCanvas = forwardRef(function DrawingCanvas({ tool, color, size, maskSrcs }, ref) {
+const DrawingCanvas = forwardRef(function DrawingCanvas({ tool, color, size, maskSrcs, enabled }, ref) {
   const canvasRef   = useRef(null);
   const tempRef     = useRef(null); // offscreen stroke buffer
   const maskRef     = useRef(null); // offscreen composited mask
@@ -160,17 +160,18 @@ const DrawingCanvas = forwardRef(function DrawingCanvas({ tool, color, size, mas
       style={{
         position: 'absolute', top: 0, left: 0,
         width: '100%', height: '100%',
-        cursor: tool === 'eraser' ? 'cell' : 'crosshair',
+        cursor: enabled ? (tool === 'eraser' ? 'cell' : 'crosshair') : 'default',
         touchAction: 'none',
         mixBlendMode: 'color',
+        pointerEvents: enabled ? 'auto' : 'none',
       }}
-      onMouseDown={onStart}
-      onMouseMove={onMove}
-      onMouseUp={onEnd}
-      onMouseLeave={onEnd}
-      onTouchStart={onStart}
-      onTouchMove={onMove}
-      onTouchEnd={onEnd}
+      onMouseDown={enabled ? onStart : undefined}
+      onMouseMove={enabled ? onMove : undefined}
+      onMouseUp={enabled ? onEnd : undefined}
+      onMouseLeave={enabled ? onEnd : undefined}
+      onTouchStart={enabled ? onStart : undefined}
+      onTouchMove={enabled ? onMove : undefined}
+      onTouchEnd={enabled ? onEnd : undefined}
     />
   );
 });

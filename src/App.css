@@ -67,6 +67,12 @@
   border: 1.5px solid rgba(255, 255, 255, 0.75);
   box-shadow: 0 4px 20px rgba(220, 160, 180, 0.15);
   backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 1;
+}
+
+.colors-card {
+  z-index: 2;
 }
 
 .panel-title {
@@ -426,6 +432,41 @@
 }
 
 /* ── Draw panel ─────────────────────────────────────────────── */
+
+.draw-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.draw-panel-header .panel-title {
+  margin-bottom: 0;
+}
+
+.draw-toggle-btn {
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1.5px solid rgba(200, 170, 220, 0.6);
+  background: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #a880c0;
+  letter-spacing: 0.08em;
+  transition: all 0.15s;
+}
+
+.draw-toggle-btn:hover {
+  background: rgba(255, 215, 235, 0.75);
+}
+
+.draw-toggle-btn.active {
+  background: rgba(180, 215, 245, 0.35);
+  border-color: #88b4e0;
+  color: #4a7ab0;
+  box-shadow: 0 0 0 2px rgba(180, 215, 245, 0.3);
+}
 
 .draw-tools {
   display: flex;

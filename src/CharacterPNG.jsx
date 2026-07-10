@@ -92,7 +92,7 @@ function Layer({ src, filterId }) {
 export default function CharacterPNG({
   skinColor, hairColor, eyeColor,
   layers,
-  drawRef, drawTool, drawColor, brushSize, maskSrcs,
+  drawRef, drawTool, drawEnabled, drawColor, brushSize, maskSrcs,
 }) {
   const ids = {
     skin: `skin-${skinColor.replace('#', '')}`,
@@ -137,6 +137,7 @@ export default function CharacterPNG({
       <DrawingCanvas
         ref={drawRef}
         tool={drawTool}
+        enabled={drawEnabled}
         color={drawColor}
         size={brushSize}
         maskSrcs={maskSrcs}
