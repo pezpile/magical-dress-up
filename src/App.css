@@ -239,15 +239,55 @@
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  padding-top: 16px;
+}
+
+.wardrobe-tab-bar {
+  display: flex;
+  gap: 4px;
+  padding: 0 4px 8px 0;
+  flex-shrink: 0;
+}
+
+.wardrobe-tab-btn {
+  flex: 1;
+  padding: 7px 4px;
+  border-radius: 10px;
+  border: 1.5px solid transparent;
+  background: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #7a90b0;
+  letter-spacing: 0.05em;
+  transition: all 0.15s;
+}
+
+.wardrobe-tab-btn:hover {
+  background: rgba(255, 215, 235, 0.75);
+  color: #7a5570;
+}
+
+.wardrobe-tab-btn.active {
+  border-color: #b8a0d8;
+  background: rgba(220, 200, 255, 0.45);
+  color: #6040a0;
+  box-shadow: 0 0 0 2px rgba(200, 180, 255, 0.2);
+}
+
+.wardrobe-scroll {
+  flex: 1;
   overflow-y: auto;
-  padding: 16px 4px 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 4px 16px 0;
   scrollbar-width: thin;
   scrollbar-color: rgba(180, 200, 230, 0.5) transparent;
 }
 
-.wardrobe-panel::-webkit-scrollbar { width: 5px; }
-.wardrobe-panel::-webkit-scrollbar-thumb {
+.wardrobe-scroll::-webkit-scrollbar { width: 5px; }
+.wardrobe-scroll::-webkit-scrollbar-thumb {
   background: rgba(180, 200, 230, 0.5);
   border-radius: 10px;
 }
@@ -544,6 +584,26 @@
 .brush-size-row input[type="range"] {
   flex: 1;
   accent-color: #c07098;
+  cursor: pointer;
+}
+
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.slider-label {
+  font-size: 0.75rem;
+  color: #7a5570;
+  width: 36px;
+  flex-shrink: 0;
+}
+
+.slider-row input[type="range"] {
+  flex: 1;
+  accent-color: #9060c0;
   cursor: pointer;
 }
 

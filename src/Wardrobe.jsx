@@ -45,32 +45,6 @@ const THUMB = {
   belly:     thumbCss(50, 58, 15),
 };
 
-const LAYER_LABELS = {
-  base:      'Base',
-  eyes:      'Eyes',
-  eyebrows:  'Eyebrows',
-  mouth:     'Mouth',
-  nose:      'Nose',
-  buns:      'Buns',
-  hairBack:  'Hair Back',
-  bangs:     'Bangs',
-  earring:   'Earrings',
-  ring:      'Ring',
-  sock:      'Socks',
-  shoe:      'Shoes',
-  pant:      'Bottoms',
-  belt:      'Belt',
-  shirt:     'Tops',
-  necklace:  'Necklace',
-  bracelet:  'Bracelet',
-  armwarmer: 'Arm Warmers',
-  hat:       'Hat',
-  hairclip:  'Hair Clip',
-  dress:     'Dress',
-  marks:     'Face Marks',
-  belly:     'Belly',
-};
-
 const WARDROBE_ASSET_MAP = {
   eyes:      EYES_ASSETS,
   eyebrows:  EYEBROWS_ASSETS,
@@ -96,7 +70,6 @@ const WARDROBE_ASSET_MAP = {
   belly:     BELLY_ASSETS,
 };
 
-// Lookup item name from data arrays for layer panel labels
 const ITEMS_BY_TYPE = {
   eyes: EYES, eyebrows: EYEBROWS, mouth: MOUTH, nose: NOSE,
   bangs: BANGS, hairBack: HAIR_BACK, buns: BUNS,
@@ -124,7 +97,6 @@ export function LayerPanel({ layers, onReorder, onRemove }) {
   const [dragKey, setDragKey] = useState(null);
   const [overKey, setOverKey] = useState(null);
 
-  // Display front-to-back (top = in front)
   const displayed = [...layers].reverse();
 
   function onDragStart(e, key) {
@@ -247,79 +219,67 @@ function Section({ label, thumbKey, items, equippedIds, onSelect, getThumbSrc })
   );
 }
 
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+const TABS = [
+  { id: 'face',   label: 'Face'   },
+  { id: 'hair',   label: 'Hair'   },
+  { id: 'outfit', label: 'Outfit' },
+  { id: 'extras', label: 'Extras' },
+];
+
 // ── Main wardrobe component ───────────────────────────────────────────────────
 export default function Wardrobe({ layers, onEquip }) {
+  const [activeTab, setActiveTab] = useState('face');
   const eqIds = type => new Set(layers.filter(l => l.type === type).map(l => l.id));
   const ts    = (type, id) => getLayerThumbSrc(type, id);
 
   return (
     <div className="wardrobe-panel">
-      <Section label="Eyes"      thumbKey="eyes"     items={EYES}
-        equippedIds={eqIds('eyes')}     onSelect={id => onEquip('eyes',     id)}
-        getThumbSrc={id => ts('eyes',     id)} />
-      <Section label="Face Marks" thumbKey="marks"   items={MARKS}
-        equippedIds={eqIds('marks')}    onSelect={id => onEquip('marks',    id)}
-        getThumbSrc={id => ts('marks',    id)} />
-      <Section label="Eyebrows"  thumbKey="eyebrows" items={EYEBROWS}
-        equippedIds={eqIds('eyebrows')} onSelect={id => onEquip('eyebrows', id)}
-        getThumbSrc={id => ts('eyebrows', id)} />
-      <Section label="Nose"      thumbKey="nose"     items={NOSE}
-        equippedIds={eqIds('nose')}     onSelect={id => onEquip('nose',     id)}
-        getThumbSrc={id => ts('nose',     id)} />
-      <Section label="Mouth"     thumbKey="mouth"    items={MOUTH}
-        equippedIds={eqIds('mouth')}    onSelect={id => onEquip('mouth',    id)}
-        getThumbSrc={id => ts('mouth',    id)} />
-      <Section label="Bangs"     thumbKey="bangs"    items={BANGS}
-        equippedIds={eqIds('bangs')}    onSelect={id => onEquip('bangs',    id)}
-        getThumbSrc={id => ts('bangs',    id)} />
-      <Section label="Buns"      thumbKey="buns"     items={BUNS}
-        equippedIds={eqIds('buns')}     onSelect={id => onEquip('buns',     id)}
-        getThumbSrc={id => ts('buns',     id)} />
-      <Section label="Hair Back" thumbKey="hairBack" items={HAIR_BACK}
-        equippedIds={eqIds('hairBack')} onSelect={id => onEquip('hairBack', id)}
-        getThumbSrc={id => ts('hairBack', id)} />
-      <Section label="Hat"       thumbKey="hat"      items={HATS}
-        equippedIds={eqIds('hat')}      onSelect={id => onEquip('hat',      id)}
-        getThumbSrc={id => ts('hat',      id)} />
-      <Section label="Hair Clip" thumbKey="hairclip" items={HAIRCLIPS}
-        equippedIds={eqIds('hairclip')} onSelect={id => onEquip('hairclip', id)}
-        getThumbSrc={id => ts('hairclip', id)} />
-      <Section label="Earrings"  thumbKey="earring"  items={EARRINGS}
-        equippedIds={eqIds('earring')}  onSelect={id => onEquip('earring',  id)}
-        getThumbSrc={id => ts('earring',  id)} />
-      <Section label="Ring"      thumbKey="ring"     items={RINGS}
-        equippedIds={eqIds('ring')}     onSelect={id => onEquip('ring',     id)}
-        getThumbSrc={id => ts('ring',     id)} />
-      <Section label="Necklace"  thumbKey="necklace" items={NECKLACES}
-        equippedIds={eqIds('necklace')} onSelect={id => onEquip('necklace', id)}
-        getThumbSrc={id => ts('necklace', id)} />
-      <Section label="Bracelet"  thumbKey="bracelet" items={BRACELETS}
-        equippedIds={eqIds('bracelet')} onSelect={id => onEquip('bracelet', id)}
-        getThumbSrc={id => ts('bracelet', id)} />
-      <Section label="Dress"      thumbKey="dress"      items={DRESSES}
-        equippedIds={eqIds('dress')}      onSelect={id => onEquip('dress',      id)}
-        getThumbSrc={id => ts('dress',      id)} />
-      <Section label="Tops"       thumbKey="shirt"      items={SHIRTS}
-        equippedIds={eqIds('shirt')}      onSelect={id => onEquip('shirt',      id)}
-        getThumbSrc={id => ts('shirt',      id)} />
-      <Section label="Belt"       thumbKey="belt"       items={BELTS}
-        equippedIds={eqIds('belt')}       onSelect={id => onEquip('belt',       id)}
-        getThumbSrc={id => ts('belt',       id)} />
-      <Section label="Belly"      thumbKey="belly"      items={BELLIES}
-        equippedIds={eqIds('belly')}      onSelect={id => onEquip('belly',      id)}
-        getThumbSrc={id => ts('belly',      id)} />
-      <Section label="Bottoms"    thumbKey="pant"       items={PANTS}
-        equippedIds={eqIds('pant')}       onSelect={id => onEquip('pant',       id)}
-        getThumbSrc={id => ts('pant',       id)} />
-      <Section label="Arm Warmers" thumbKey="armwarmer" items={ARMWARMERS}
-        equippedIds={eqIds('armwarmer')}  onSelect={id => onEquip('armwarmer',  id)}
-        getThumbSrc={id => ts('armwarmer',  id)} />
-      <Section label="Socks"      thumbKey="sock"       items={SOCKS}
-        equippedIds={eqIds('sock')}       onSelect={id => onEquip('sock',       id)}
-        getThumbSrc={id => ts('sock',       id)} />
-      <Section label="Shoes"      thumbKey="shoe"       items={SHOES}
-        equippedIds={eqIds('shoe')}       onSelect={id => onEquip('shoe',       id)}
-        getThumbSrc={id => ts('shoe',       id)} />
+      <div className="wardrobe-tab-bar">
+        {TABS.map(t => (
+          <button
+            key={t.id}
+            className={`wardrobe-tab-btn${activeTab === t.id ? ' active' : ''}`}
+            onClick={() => setActiveTab(t.id)}
+          >{t.label}</button>
+        ))}
+      </div>
+
+      <div className="wardrobe-scroll">
+        {activeTab === 'face' && <>
+          <Section label="Eyes"       thumbKey="eyes"     items={EYES}     equippedIds={eqIds('eyes')}     onSelect={id => onEquip('eyes',     id)} getThumbSrc={id => ts('eyes',     id)} />
+          <Section label="Face Marks" thumbKey="marks"    items={MARKS}    equippedIds={eqIds('marks')}    onSelect={id => onEquip('marks',    id)} getThumbSrc={id => ts('marks',    id)} />
+          <Section label="Eyebrows"   thumbKey="eyebrows" items={EYEBROWS} equippedIds={eqIds('eyebrows')} onSelect={id => onEquip('eyebrows', id)} getThumbSrc={id => ts('eyebrows', id)} />
+          <Section label="Nose"       thumbKey="nose"     items={NOSE}     equippedIds={eqIds('nose')}     onSelect={id => onEquip('nose',     id)} getThumbSrc={id => ts('nose',     id)} />
+          <Section label="Mouth"      thumbKey="mouth"    items={MOUTH}    equippedIds={eqIds('mouth')}    onSelect={id => onEquip('mouth',    id)} getThumbSrc={id => ts('mouth',    id)} />
+        </>}
+
+        {activeTab === 'hair' && <>
+          <Section label="Bangs"     thumbKey="bangs"    items={BANGS}     equippedIds={eqIds('bangs')}    onSelect={id => onEquip('bangs',    id)} getThumbSrc={id => ts('bangs',    id)} />
+          <Section label="Buns"      thumbKey="buns"     items={BUNS}      equippedIds={eqIds('buns')}     onSelect={id => onEquip('buns',     id)} getThumbSrc={id => ts('buns',     id)} />
+          <Section label="Hair Back" thumbKey="hairBack" items={HAIR_BACK} equippedIds={eqIds('hairBack')} onSelect={id => onEquip('hairBack', id)} getThumbSrc={id => ts('hairBack', id)} />
+          <Section label="Hat"       thumbKey="hat"      items={HATS}      equippedIds={eqIds('hat')}      onSelect={id => onEquip('hat',      id)} getThumbSrc={id => ts('hat',      id)} />
+          <Section label="Hair Clip" thumbKey="hairclip" items={HAIRCLIPS} equippedIds={eqIds('hairclip')} onSelect={id => onEquip('hairclip', id)} getThumbSrc={id => ts('hairclip', id)} />
+        </>}
+
+        {activeTab === 'outfit' && <>
+          <Section label="Dress"       thumbKey="dress"     items={DRESSES}   equippedIds={eqIds('dress')}     onSelect={id => onEquip('dress',     id)} getThumbSrc={id => ts('dress',     id)} />
+          <Section label="Tops"        thumbKey="shirt"     items={SHIRTS}    equippedIds={eqIds('shirt')}     onSelect={id => onEquip('shirt',     id)} getThumbSrc={id => ts('shirt',     id)} />
+          <Section label="Belt"        thumbKey="belt"      items={BELTS}     equippedIds={eqIds('belt')}      onSelect={id => onEquip('belt',      id)} getThumbSrc={id => ts('belt',      id)} />
+          <Section label="Belly"       thumbKey="belly"     items={BELLIES}   equippedIds={eqIds('belly')}     onSelect={id => onEquip('belly',     id)} getThumbSrc={id => ts('belly',     id)} />
+          <Section label="Bottoms"     thumbKey="pant"      items={PANTS}     equippedIds={eqIds('pant')}      onSelect={id => onEquip('pant',      id)} getThumbSrc={id => ts('pant',      id)} />
+          <Section label="Arm Warmers" thumbKey="armwarmer" items={ARMWARMERS} equippedIds={eqIds('armwarmer')} onSelect={id => onEquip('armwarmer', id)} getThumbSrc={id => ts('armwarmer', id)} />
+          <Section label="Socks"       thumbKey="sock"      items={SOCKS}     equippedIds={eqIds('sock')}      onSelect={id => onEquip('sock',      id)} getThumbSrc={id => ts('sock',      id)} />
+          <Section label="Shoes"       thumbKey="shoe"      items={SHOES}     equippedIds={eqIds('shoe')}      onSelect={id => onEquip('shoe',      id)} getThumbSrc={id => ts('shoe',      id)} />
+        </>}
+
+        {activeTab === 'extras' && <>
+          <Section label="Earrings" thumbKey="earring"  items={EARRINGS}  equippedIds={eqIds('earring')}  onSelect={id => onEquip('earring',  id)} getThumbSrc={id => ts('earring',  id)} />
+          <Section label="Ring"     thumbKey="ring"     items={RINGS}     equippedIds={eqIds('ring')}     onSelect={id => onEquip('ring',     id)} getThumbSrc={id => ts('ring',     id)} />
+          <Section label="Necklace" thumbKey="necklace" items={NECKLACES} equippedIds={eqIds('necklace')} onSelect={id => onEquip('necklace', id)} getThumbSrc={id => ts('necklace', id)} />
+          <Section label="Bracelet" thumbKey="bracelet" items={BRACELETS} equippedIds={eqIds('bracelet')} onSelect={id => onEquip('bracelet', id)} getThumbSrc={id => ts('bracelet', id)} />
+        </>}
+      </div>
     </div>
   );
 }

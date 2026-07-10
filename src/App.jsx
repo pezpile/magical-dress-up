@@ -115,6 +115,9 @@ export default function App() {
   const [skinColor, setSkinColor] = useState('#f5c5a3');
   const [hairColor, setHairColor] = useState('#5a2e1a');
   const [eyeColor,  setEyeColor]  = useState('#3b82f6');
+  const [outfitHue,    setOutfitHue]    = useState(0);
+  const [outfitBright, setOutfitBright] = useState(100);
+  const [outfitSat,    setOutfitSat]    = useState(100);
 
   // Single source of truth: ordered array of equipped items (index 0 = behind)
   // Each entry: { key: string (stable), type: string, id: number }
@@ -152,6 +155,9 @@ export default function App() {
     setSkinColor('#f5c5a3');
     setHairColor('#5a2e1a');
     setEyeColor('#3b82f6');
+    setOutfitHue(0);
+    setOutfitBright(100);
+    setOutfitSat(100);
     setLayers([{ key: 'base', type: 'base', id: 0 }]);
     nextKey.current = 1;
     drawRef.current?.clear();
@@ -252,6 +258,22 @@ export default function App() {
             <ColorSwatch label="Skin" color={skinColor} onChange={setSkinColor} />
             <ColorSwatch label="Hair" color={hairColor} onChange={setHairColor} />
             <ColorSwatch label="Eyes" color={eyeColor}  onChange={setEyeColor}  />
+            <h3 className="draw-subtitle" style={{ marginTop: 10 }}>Outfit</h3>
+            <div className="slider-row">
+              <span className="slider-label">Hue</span>
+              <input type="range" min="0" max="360" value={outfitHue}
+                onChange={e => setOutfitHue(+e.target.value)} />
+            </div>
+            <div className="slider-row">
+              <span className="slider-label">Bright</span>
+              <input type="range" min="30" max="170" value={outfitBright}
+                onChange={e => setOutfitBright(+e.target.value)} />
+            </div>
+            <div className="slider-row">
+              <span className="slider-label">Sat</span>
+              <input type="range" min="0" max="200" value={outfitSat}
+                onChange={e => setOutfitSat(+e.target.value)} />
+            </div>
           </div>
 
           <div className="panel-card">
@@ -313,6 +335,7 @@ export default function App() {
           </div>
           <CharacterPNG
             skinColor={skinColor} hairColor={hairColor} eyeColor={eyeColor}
+            outfitHue={outfitHue} outfitBright={outfitBright} outfitSat={outfitSat}
             layers={layers}
             drawRef={drawRef} drawTool={drawTool} drawEnabled={drawEnabled}
             drawColor={drawColor} brushSize={brushSize}

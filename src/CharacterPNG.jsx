@@ -33,8 +33,12 @@ const ASSET_MAP = {
   belly:     BELLY_ASSETS,
 };
 
-const HAIR_TYPES = new Set(['buns', 'hairBack', 'bangs', 'eyebrows']);
-const SKIN_TYPES = new Set(['mouth', 'nose', 'marks']);
+const HAIR_TYPES    = new Set(['buns', 'hairBack', 'bangs', 'eyebrows']);
+const SKIN_TYPES    = new Set(['mouth', 'nose', 'marks']);
+const OUTFIT_TYPES  = new Set([
+  'shirt', 'pant', 'sock', 'shoe', 'dress', 'belt', 'belly', 'armwarmer',
+  'earring', 'necklace', 'bracelet', 'ring', 'hat', 'hairclip',
+]);
 
 function hexToRgb(hex) {
   const h = hex.replace('#', '');
@@ -78,19 +82,21 @@ function WhitenFilter() {
   );
 }
 
-function Layer({ src, filterId }) {
+function Layer({ src, filterId, cssFilter }) {
+  const parts = [filterId ? `url(#${filterId})` : null, cssFilter ?? null].filter(Boolean);
   return (
     <img src={src} alt="" style={{
       position: 'absolute', top: 0, left: 0,
       width: '100%', height: '100%',
       objectFit: 'fill',
-      filter: filterId ? `url(#${filterId})` : undefined,
+      filter: parts.length ? parts.join(' ') : undefined,
     }} />
   );
 }
 
 export default function CharacterPNG({
   skinColor, hairColor, eyeColor,
+  outfitHue, outfitBright, outfitSat,
   layers,
   drawRef, drawTool, drawEnabled, drawColor, brushSize, maskSrcs,
 }) {
@@ -131,7 +137,10 @@ export default function CharacterPNG({
         const filterId = HAIR_TYPES.has(type) ? ids.hair
                        : SKIN_TYPES.has(type) ? ids.skin
                        : undefined;
-        return <Layer key={key} src={asset.src} filterId={filterId} />;
+        const cssFilter = OUTFIT_TYPES.has(type)
+          ? `hue-rotate(${outfitHue}deg) brightness(${outfitBright / 100}) saturate(${outfitSat / 100})`
+          : undefined;
+        return <Layer key={key} src={asset.src} filterId={filterId} cssFilter={cssFilter} />;
       })}
 
       <DrawingCanvas
