@@ -34,7 +34,7 @@ const ASSET_MAP = {
 };
 
 const HAIR_TYPES = new Set(['buns', 'hairBack', 'bangs', 'eyebrows']);
-const SKIN_TYPES = new Set(['mouth', 'nose']);
+const SKIN_TYPES = new Set(['mouth', 'nose', 'marks']);
 
 function hexToRgb(hex) {
   const h = hex.replace('#', '');
