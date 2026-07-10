@@ -25,10 +25,11 @@ const LAYER_ORDER = {
   bangs:     4,
   sock:      5,
   shoe:      6,
-  earring:   7,  necklace: 7, bracelet: 7, ring: 7, armwarmer: 7, belt: 7,
+  earring:   7,  necklace: 7, bracelet: 7, ring: 7, armwarmer: 7,
   belly:     7.5,
   pant:      8,
   shirt:     9,  hat: 9, hairclip: 9, dress: 9,
+  belt:      9.5,
   marks:     3.5,
 };
 
@@ -194,9 +195,10 @@ export default function App() {
       maybe(1.0, 'buns',     BUNS);
     }
 
-    // Outfit — always dress OR top+pants
+    // Outfit — always dress OR top+pants; dress can also have pants
     if (Math.random() < 0.25) {
       maybe(1.0, 'dress', DRESSES);
+      maybe(0.5, 'pant',  PANTS);
     } else {
       maybe(1.0, 'shirt', SHIRTS);
       maybe(1.0, 'pant',  PANTS);
