@@ -9,6 +9,7 @@ export const EYES_ASSETS = {
   3: { iris: '/assets/eyes/eye4.png' },
   4: { iris: '/assets/eyes/eye5.png' },
   5: { iris: '/assets/eyes/eye6.png' },
+  6: { iris: '/assets/eyes/eye7.png' },
 };
 
 // All other assets use { src }
@@ -19,6 +20,7 @@ export const EYEBROWS_ASSETS = {
   3: { src: '/assets/eyes/eyebrow4.png' },
   4: { src: '/assets/eyes/eyebrow5.png' },
   5: { src: '/assets/eyes/eyebrow6.png' },
+  6: { src: '/assets/eyes/eyebrow7.png' },
 };
 export const MOUTH_ASSETS = {
   0: { src: '/assets/mouth/mouth1.png' },
@@ -28,12 +30,14 @@ export const MOUTH_ASSETS = {
   4: { src: '/assets/mouth/mouth5.png' },
   5: { src: '/assets/mouth/mouth6.png' },
   6: { src: '/assets/mouth/mouth7.png' },
+  7: { src: '/assets/mouth/mouth8.png' },
 };
 export const NOSE_ASSETS = {
   0: { src: '/assets/nose/nose.png' },
   1: { src: '/assets/nose/nose2.png' },
   2: { src: '/assets/nose/nose3.png' },
   3: { src: '/assets/nose/nose4.png' },
+  4: { src: '/assets/nose/nose5.png' },
 };
 
 export const BANGS_ASSETS = {
@@ -44,6 +48,7 @@ export const BANGS_ASSETS = {
   4: { src: '/assets/hairbang/bang5.png' },
   5: { src: '/assets/hairbang/bang6.png' },
   6: { src: '/assets/hairbang/bang7.png' },
+  7: { src: '/assets/hairbang/bang8.png' },
 };
 export const HAIR_BACK_ASSETS = {
   0: { src: '/assets/hairback/hairback1.png' },
@@ -51,12 +56,14 @@ export const HAIR_BACK_ASSETS = {
   2: { src: '/assets/hairback/hairback3.png' },
   3: { src: '/assets/hairback/hairback4.png' },
   4: { src: '/assets/hairback/hairback5.png' },
+  5: { src: '/assets/hairback/hairback6.png' },
 };
 export const BUNS_ASSETS = {
   0: { src: '/assets/hairextras/buns1.png' },
   1: { src: '/assets/hairextras/buns2.png' },
   2: { src: '/assets/hairextras/buns3.png' },
   3: { src: '/assets/hairextras/buns4.png' },
+  4: { src: '/assets/hairextras/buns5.png' },
 };
 
 export const SHIRT_ASSETS = {
@@ -73,6 +80,7 @@ export const PANT_ASSETS = {
   2: { src: '/assets/pants/pant3.png' },
   3: { src: '/assets/pants/pant4.png' },
   4: { src: '/assets/pants/pant5.png' },
+  5: { src: '/assets/pants/pant6.png' },
 };
 export const SOCK_ASSETS = {
   0: { src: '/assets/socks/sock1.png' },
@@ -87,6 +95,7 @@ export const SHOE_ASSETS = {
   3: { src: '/assets/shoes/shoe4.png' },
   4: { src: '/assets/shoes/shoe5.png' },
   5: { src: '/assets/shoes/shoe6.png' },
+  6: { src: '/assets/shoes/shoe7.png' },
 };
 
 export const NECKLACE_ASSETS = {
@@ -106,6 +115,7 @@ export const EARRING_ASSETS = {
   3: { src: '/assets/accessories/earring4.png' },
   4: { src: '/assets/accessories/earring5.png' },
   5: { src: '/assets/accessories/earring6.png' },
+  6: { src: '/assets/accessories/earring7.png' },
 };
 export const BELT_ASSETS = {
   0: { src: '/assets/accessories/belt1.png' },
@@ -120,7 +130,10 @@ export const ARMWARMER_ASSETS = {
 };
 export const BELLY_ASSETS     = { 0: { src: '/assets/accessories/bellystud1.png'  } };
 
-export const HAT_ASSETS      = { 0: { src: '/assets/headwear/hat1.png'       } };
+export const HAT_ASSETS      = {
+  0: { src: '/assets/headwear/hat1.png' },
+  1: { src: '/assets/headwear/hat2.png' },
+};
 export const HAIRCLIP_ASSETS = {
   0: { src: '/assets/headwear/hairclip1.png'  },
   1: { src: '/assets/headwear/hairflower1.png' },
@@ -133,11 +146,13 @@ export const HAIRTIE_ASSETS = {
 };
 
 export const MARKS_ASSETS = {
-  0: { src: '/assets/face/freckles1.png' },
-  1: { src: '/assets/face/moles1.png'    },
+  0: { src: '/assets/face/freckles1.png'   },
+  1: { src: '/assets/face/moles1.png'      },
+  2: { src: '/assets/face/facesticker1.png' },
 };
 
 export const DRESS_ASSETS = {
   0: { src: '/assets/dress/dress1.png' },
   1: { src: '/assets/dress/dress2.png' },
+  2: { src: '/assets/dress/dress3.png' },
 };

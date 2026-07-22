@@ -5,6 +5,7 @@ export const EYES = [
   { id: 3, name: 'Heart',   emoji: '👁️' },
   { id: 4, name: 'Style 5', emoji: '👁️' },
   { id: 5, name: 'Style 6', emoji: '👁️' },
+  { id: 6, name: 'Style 7', emoji: '👁️' },
 ];
 export const EYEBROWS = [
   { id: 0, name: 'Style 1', emoji: '〰️' },
@@ -13,6 +14,7 @@ export const EYEBROWS = [
   { id: 3, name: 'Style 4', emoji: '〰️' },
   { id: 4, name: 'Style 5', emoji: '〰️' },
   { id: 5, name: 'Thin',    emoji: '〰️' },
+  { id: 6, name: 'Natural', emoji: '〰️' },
 ];
 export const MOUTH = [
   { id: 0, name: 'Style 1', emoji: '💋' },
@@ -22,12 +24,14 @@ export const MOUTH = [
   { id: 4, name: 'Style 5', emoji: '💋' },
   { id: 5, name: 'Style 6', emoji: '💋' },
   { id: 6, name: 'Style 7', emoji: '💋' },
+  { id: 7, name: 'Style 8', emoji: '💋' },
 ];
 export const NOSE = [
   { id: 0, name: 'Style 1', emoji: '✦' },
   { id: 1, name: 'Style 2', emoji: '✦' },
   { id: 2, name: 'Style 3', emoji: '✦' },
   { id: 3, name: 'Style 4', emoji: '✦' },
+  { id: 4, name: 'Style 5', emoji: '✦' },
 ];
 
 export const BANGS = [
@@ -38,19 +42,22 @@ export const BANGS = [
   { id: 4, name: 'Style 5', emoji: '✂️' },
   { id: 5, name: 'Style 6', emoji: '✂️' },
   { id: 6, name: 'Style 7', emoji: '✂️' },
+  { id: 7, name: 'Style 8', emoji: '✂️' },
 ];
 export const HAIR_BACK = [
-  { id: 0, name: 'Style 1',  emoji: '🌸' },
-  { id: 1, name: 'Style 2',  emoji: '🌸' },
-  { id: 2, name: 'Straight', emoji: '🌸' },
-  { id: 3, name: 'Updo',     emoji: '🌸' },
-  { id: 4, name: 'Pigtails', emoji: '🌸' },
+  { id: 0, name: 'Style 1',   emoji: '🌸' },
+  { id: 1, name: 'Style 2',   emoji: '🌸' },
+  { id: 2, name: 'Straight',  emoji: '🌸' },
+  { id: 3, name: 'Updo',      emoji: '🌸' },
+  { id: 4, name: 'Pigtails',  emoji: '🌸' },
+  { id: 5, name: 'Voluminous', emoji: '🌸' },
 ];
 export const BUNS = [
   { id: 0, name: 'Style 1',   emoji: '🌀' },
   { id: 1, name: 'Rose Buns', emoji: '🌀' },
   { id: 2, name: 'Braided',   emoji: '🌀' },
   { id: 3, name: 'Oval',      emoji: '🌀' },
+  { id: 4, name: 'Up Braids', emoji: '🌀' },
 ];
 
 export const SHIRTS = [
@@ -67,6 +74,7 @@ export const PANTS = [
   { id: 2, name: 'Gradient Shorts', emoji: '🩳' },
   { id: 3, name: 'Pleated Mini',    emoji: '🩳' },
   { id: 4, name: 'Floral Skirt',    emoji: '🩳' },
+  { id: 5, name: 'Tights',          emoji: '🩳' },
 ];
 export const SOCKS = [
   { id: 0, name: 'Ruffled', emoji: '🧦' },
@@ -81,6 +89,7 @@ export const SHOES = [
   { id: 3, name: 'Flip Flops',     emoji: '👟' },
   { id: 4, name: 'Sandals',        emoji: '👟' },
   { id: 5, name: 'Heels',          emoji: '👟' },
+  { id: 6, name: 'Short Boots',    emoji: '👟' },
 ];
 
 export const NECKLACES = [
@@ -100,6 +109,7 @@ export const EARRINGS = [
   { id: 3, name: 'Crescent',     emoji: '✿' },
   { id: 4, name: 'Purple Studs', emoji: '✿' },
   { id: 5, name: 'Gold Studs',   emoji: '✿' },
+  { id: 6, name: 'Snowflakes',   emoji: '✿' },
 ];
 export const BELTS      = [
   { id: 0, name: 'Checkered', emoji: '🎀' },
@@ -114,7 +124,10 @@ export const ARMWARMERS = [
 ];
 export const BELLIES    = [{ id: 0, name: 'Belly Stud',   emoji: '✦' }];
 
-export const HATS       = [{ id: 0, name: 'Bow Hat',      emoji: '🎀' }];
+export const HATS       = [
+  { id: 0, name: 'Bow Hat',   emoji: '🎀' },
+  { id: 1, name: 'Snowflake', emoji: '🎀' },
+];
 export const HAIRCLIPS  = [
   { id: 0, name: 'Arrow Clip',  emoji: '📎' },
   { id: 1, name: 'Hair Flower', emoji: '📎' },
@@ -127,11 +140,13 @@ export const HAIRTIES = [
 ];
 
 export const DRESSES    = [
-  { id: 0, name: 'Mini Dress', emoji: '👗' },
-  { id: 1, name: 'Sundress',   emoji: '👗' },
+  { id: 0, name: 'Mini Dress',    emoji: '👗' },
+  { id: 1, name: 'Sundress',      emoji: '👗' },
+  { id: 2, name: 'Sweater Dress', emoji: '👗' },
 ];
 
 export const MARKS      = [
-  { id: 0, name: 'Freckles', emoji: '✦' },
-  { id: 1, name: 'Moles',    emoji: '✦' },
+  { id: 0, name: 'Freckles',    emoji: '✦' },
+  { id: 1, name: 'Moles',       emoji: '✦' },
+  { id: 2, name: 'Face Sticker', emoji: '✦' },
 ];
